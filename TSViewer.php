@@ -18,12 +18,9 @@
  *  along with devMX Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
  */
 // Check PHP version
-if (version_compare(phpversion(), 5.3, "<")) exit("PHP 5.3 or higher required.");
+if (version_compare(phpversion(), "5.3.2", "<")) exit("PHP 5.3.2 or higher required.");
 
 $rootDirServer = __DIR__ . "/";
-
-// Include TS3-Libary
-require_once $rootDirServer . "vendor/.composer/autoload.php";
 
 spl_autoload_register(function($class)
         {
