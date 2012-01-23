@@ -1,0 +1,206 @@
+.devmx-webviewer
+{
+    font-family: sans-serif;
+    font-size: 14px;
+    white-space: nowrap;
+    width: 100%;
+}
+
+/* Servername */
+.servername
+{
+    margin-left: 3px;
+}
+
+
+/* General */
+
+.channel, .client
+{
+    margin-left: 16px;
+    margin-top: 1px;
+}
+
+
+span.label
+{
+    margin-left: 3px;
+}
+
+
+/* General image */
+.ts-image
+{
+    display: inline-block;
+    width: 16px;
+    height: 16px;
+    background-repeat: no-repeat;
+}
+
+/* Left aligned image */
+.image-left
+{
+    float: left;
+}
+
+/* Right aligned image */
+.image-right
+{
+    float: right;
+    margin-left: 3px;
+}
+
+
+/* Channels */
+/* normal channel */
+.channel-normal
+{
+    background-image: url("../img/channel-normal.png");
+}
+
+/* Full channel */
+.channel-full
+{
+    background-image: url("../img/channel-full.png");
+}
+
+/* Channel with password */
+.channel-password
+{
+    background-image: url("../img/channel-password.png");
+}
+
+/* Default channel */
+.channel-home
+{
+    background-image: url("../img/channel-home.png");
+}
+
+/* Moderated channel */
+.channel-moderated
+{
+    background-image: url("../img/channel-moderated.png");
+}
+
+/* Channel with 48khz codec */
+.channel-48khz
+{
+    background-image: url("../img/channel-48khz.png");
+}
+
+
+/* Server image */
+.server-image
+{
+    background-image: url("../img/server.png");
+}
+
+
+/* Clients */
+/* normal client */
+.client-normal
+{
+    background-image: url("../img/normal-client.png");
+}
+
+/* mic muted client */
+.client-input-muted
+{
+    background-image: url("../img/input-muted.png");
+}
+
+/* speaker muted client */
+.client-output-muted
+{
+    background-image: url("../img/output-muted.png");
+}
+
+/* hardware mic muted client */
+.client-input-muted-hardware
+{
+    background-image: url("../img/hardware-input-muted.png");
+}
+
+/* hardware speaker muted client */
+.client-ouput-muted-hardware
+{
+    background-image: url("../img/hardware-output-muted.png");
+}
+
+/* away client */
+.client-away
+{
+    background-image: url("../img/client-away.png");
+}
+
+/* Client with priority speaker */
+.client-priority-speaker
+{
+    background-image: url("../img/client-priority-speaker.png");
+}
+
+
+/* Spacer */
+/* General */
+p.spacer
+{
+    margin: 0px;
+}
+
+/* right spacer */
+.spacer-right
+{
+    text-align: right;
+}
+
+/* left spacer */
+.spacer-left
+{
+    text-align: left;
+}
+
+/* center spacer */
+.spacer-center
+{
+    text-align: center;
+}
+
+/* ___ */
+.spacer-line
+{
+    background: url(../img/linie.png) repeat-x;
+}
+
+/* --- */
+.spacer-dash
+{
+    background: url(../img/bs.png) repeat-x;
+}
+
+/* -.- */
+.spacer-line-point
+{
+    background: url(../img/bspunkt.png) repeat-x;
+}
+
+/* -.. */
+.spacer-line-double-point
+{
+    background: url(../img/bsdpunkt.png) repeat-x;
+}
+
+/* ... */
+.spacer-point
+{
+    background: url(../img/punkt.png) repeat-x;
+}
+
+/* repeat spacer */
+.spacer-overflow
+{
+    width: inherit;
+    overflow: hidden;
+}
+
+
+

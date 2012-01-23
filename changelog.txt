@@ -1,0 +1,12 @@
+##########################
+## devMX Webviewer Lite ##
+##########################
+
+! Major Change
++ Add
+- Removal
+~ Minor Change
+* Fix
+
+v1.0
+! initial release
