@@ -20,36 +20,37 @@
 // Check PHP version
 if (version_compare(phpversion(), 5.3, "<")) exit("PHP 5.3 or higher required.");
 
-$rootDir = __DIR__ . "/";
+$rootDirServer = __DIR__ . "/";
+
 
 spl_autoload_register(function($class)
         {
-            global $rootDir;
+            global $rootDirServer;
             $path = str_replace("\\", "/", $class);
-            $path = $rootDir . "lib/" . $path . ".php";
+            $path = $rootDirServer . "lib/" . $path . ".php";
             if (\file_exists($path)) require_once $path;
         });
 
-        
+
 // Create viewer options
 $viewerOptions = new devmx\TSWebViewer\RenderOptions();
 $viewerOptions->stylesheetURL("css/style.css");
 $viewerOptions->imageCaching(true);
 $viewerOptions->imageCachingPathPublic("http://testing.devmx.de/maxe/TeamSpeak3-Webviewer-Lite/cache/");
-$viewerOptions->imageCachingPathServer("./cache/");
-$viewerOptions->HTMLCachingPath("./cache/");
+$viewerOptions->imageCachingPathServer($rootDirServer . "cache/");
+$viewerOptions->HTMLCachingPath($rootDirServer . "./cache/");
 $viewerOptions->HTMLCachingTime(180);
 $viewerOptions->HTMLCaching(true);
 
 // Load configuration file
-$config = simplexml_load_file($rootDir . "config.xml");
+$config = simplexml_load_file($rootDirServer . "config.xml");
 
-$host = (string)$config->host;
-$queryPort = (int)$config->queryport;
-$serverPort = (int)$config->serverport;
+$host = (string) $config->host;
+$queryPort = (int) $config->queryport;
+$serverPort = (int) $config->serverport;
 
-$username = (string)$config->username;
-$password = (string)$config->password;
+$username = (string) $config->username;
+$password = (string) $config->password;
 
 // Check for empty config variables
 if (empty($host) || empty($queryPort) || empty($serverPort)) exit("Not all config variables are filled out. Please check your config.");
@@ -72,8 +73,6 @@ try
 }
 catch (Exception $ex)
 {
-    echo(sprintf("<strong>Fatal Error:</strong> %s<br><strong>line: </strong>%s<br><strong>File: </strong>%s<br><strong>Trace: </strong><pre>%s</pre>",
-            $ex->getMessage(), $ex->getLine(), $ex->getFile(),
-            $ex->getTraceAsString()));
+    echo(sprintf("<strong>Fatal Error:</strong> %s<br><strong>line: </strong>%s<br><strong>File: </strong>%s<br><strong>Trace: </strong><pre>%s</pre>", $ex->getMessage(), $ex->getLine(), $ex->getFile(), $ex->getTraceAsString()));
 }
 ?>
