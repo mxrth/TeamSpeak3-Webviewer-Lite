@@ -1,2 +1,9 @@
 /.git-rewrite/
 /nbproject/
+/composer.phar
+/lib/devmx/.composer/
+/vendor/.composer/
+/lib/.composer/
+/src/devmx/.composer/
+/composer.lock
+/vendor/
