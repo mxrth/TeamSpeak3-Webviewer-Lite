@@ -1,5 +1,7 @@
 <?xml version="1.0"?>
 <config>
+    <!-- ### Basic configuration ### -->
+    
     <!-- Hostname or ip adress of your teamspeak3 server -->
     <!-- e.g. example.com or 192.168.178.2 -->
     <host></host>
@@ -23,7 +25,13 @@
     <password></password>
     
     
+    <!-- ### Advanced configuration ### -->
+    
     <!-- If the viewer should be cached (recommended) -->
     <!-- default: true -->
     <caching>true</caching>
+    
+    <!-- If the viewer should download custom icons (recommended) -->
+    <!-- default: true -->
+    <downloadIcons>true</downloadIcons>
 </config>

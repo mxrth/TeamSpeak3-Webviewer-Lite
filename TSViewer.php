@@ -72,7 +72,7 @@ if ((string) $config->caching == "true")
     $viewerOptions->imageCachingPathServer($rootDirServer . "cache/");
     $viewerOptions->HTMLCachingPath($rootDirServer . "cache/");
     $viewerOptions->HTMLCachingTime(180);
-    //$viewerOptions->HTMLCaching(true);
+    $viewerOptions->HTMLCaching(true);
 }
 
 

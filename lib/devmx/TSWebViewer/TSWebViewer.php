@@ -265,8 +265,8 @@ class TSWebViewer
             $html = '%s<span class="ts-image server-image">&nbsp;</span><a href="%s"><span class="servername">%s</span></a>';
             $tsLink = 'ts3server://%s?port=%s';
             $targetLink = $this->renderOptions->connectLinkTarget();
-            
-            if(!$targetLink)
+
+            if (!$targetLink)
             {
                 $tsLink = sprintf($tsLink, $this->host, $this->serverPort);
             }
@@ -274,7 +274,7 @@ class TSWebViewer
             {
                 $tsLink = sprintf($tsLink, $this->renderOptions->connectLinkTarget(), $this->serverPort);
             }
-            
+
             return sprintf($html, $this->renderServerIcon($serverItem), $tsLink, $this->Utf8ToHtml($serverItem['virtualserver_name']));
         }
         else
@@ -546,6 +546,11 @@ class TSWebViewer
         // No standard image --> download it
         else
         {
+            // If icon download is disabled
+            $downloadImages = $this->renderOptions->downloadCustomImages();
+            if ($downloadImages == false) return "";
+
+
             // Check for icon caching
             $css = $this->manageImageCaching($iconId);
 

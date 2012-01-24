@@ -34,7 +34,7 @@ class RenderOptions
      */
     public function headTags($use = null)
     {
-        if (empty($use))
+        if (is_null($use))
         {
             return $this->headTags;
         }
@@ -54,7 +54,7 @@ class RenderOptions
      */
     public function renderServerQueryClients($render = null)
     {
-        if (empty($render))
+        if (is_null($render))
         {
             return $this->renderServerQueryClients;
         }
@@ -74,7 +74,7 @@ class RenderOptions
      */
     public function connectLink($addLink = null)
     {
-        if (empty($addLink))
+        if (is_null($addLink))
         {
             return $this->connectLink;
         }
@@ -94,7 +94,7 @@ class RenderOptions
      */
     public function connectLinkTarget($linkTarget = null)
     {
-        if (empty($linkTarget))
+        if (is_null($linkTarget))
         {
             if (is_string($this->connectLinkTarget)) return $this->connectLinkTarget;
             else return false;
@@ -115,7 +115,7 @@ class RenderOptions
      */
     public function stylesheetURL($url = null)
     {
-        if (empty($url))
+        if (is_null($url))
         {
             return $this->stylesheetURL;
         }
@@ -135,7 +135,7 @@ class RenderOptions
      */
     public function imgPath($path = null)
     {
-        if (empty($path)) return $this->imagePath;
+        if (is_null($path)) return $this->imagePath;
         else
         {
             if (substr($path, -1) != "/") $path .= "/";
@@ -151,7 +151,7 @@ class RenderOptions
      */
     public function downloadCustomImages($download = null)
     {
-        if (empty($download))
+        if (is_null($download))
         {
             return $this->downloadCustomImages;
         }
@@ -171,7 +171,7 @@ class RenderOptions
      */
     public function divClass($class = null)
     {
-        if (empty($class))
+        if (is_null($class))
         {
             return $this->divClass;
         }
@@ -191,7 +191,7 @@ class RenderOptions
      */
     public function HTMLCaching($enabled = null)
     {
-        if (empty($enabled))
+        if (is_null($enabled))
         {
             return $this->HTMLCaching;
         }
@@ -211,7 +211,7 @@ class RenderOptions
      */
     public function HTMLCachingPath($path = null)
     {
-        if (empty($path))
+        if (is_null($path))
         {
             return $this->HTMLCachingPath;
         }
@@ -231,7 +231,7 @@ class RenderOptions
      */
     public function HTMLCachingTime($time = null)
     {
-        if (empty($time))
+        if (is_null($time))
         {
             return $this->HTMLCachingTime;
         }
@@ -251,7 +251,7 @@ class RenderOptions
      */
     public function imageCaching($use = null)
     {
-        if (empty($use))
+        if (is_null($use))
         {
             return $this->imageCaching;
         }
@@ -272,7 +272,7 @@ class RenderOptions
      */
     public function imageCachingPathServer($path = null)
     {
-        if (empty($path)) return $this->imageCachingPathServer;
+        if (is_null($path)) return $this->imageCachingPathServer;
         else
         {
             if (substr($path, -1) !== "/") $this->imageCachingPathServer = $path . "/";
@@ -291,7 +291,7 @@ class RenderOptions
      */
     public function imageCachingPathPublic($path = null)
     {
-        if (empty($path)) return $this->imageCachingPathPublic;
+        if (is_null($path)) return $this->imageCachingPathPublic;
         else
         {
             if (substr($path, -1) !== "/") $this->imageCachingPathPublic = $path . "/";
