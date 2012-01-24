@@ -105,14 +105,9 @@ class QueryTransport implements \devmx\Teamspeak3\Query\Transport\TransportInter
      * Connects to the Server
      */
     public function connect() {
-        try {
-           $this->transmission->establish();
-            $this->checkWelcomeMessage();
-            $this->isConnected = TRUE; 
-        } catch(\Exception $e) {
-            throw new \RuntimeException('Cannot connect: '.$e->getMessage());
-        }
-        
+        $this->transmission->establish();
+        $this->checkWelcomeMessage();
+        $this->isConnected = TRUE;
     }
     
     /**
@@ -179,11 +174,12 @@ class QueryTransport implements \devmx\Teamspeak3\Query\Transport\TransportInter
         $responses = $this->responseHandler->getResponseInstance( $command , $data );
         
         $this->pendingEvents = array_merge($this->pendingEvents,$responses['events']);
+
         return $responses['response'];
     }
     
     public function query($cmdname, array $params=Array(),array $options=Array()) {
-        return $this->sendCommand(new Command($cmdname , $params , $options));
+        return $this->sendCommand(Command::simpleCommand($cmdname , $params , $options));
     }
     
     /**
@@ -209,7 +205,7 @@ class QueryTransport implements \devmx\Teamspeak3\Query\Transport\TransportInter
     }
     
     public function disconnect() {
-        $this->transmission->send("quit\n");
+        $this->query("quit");
         $this->transmission->close();
         $this->isConnected = FALSE;
     }

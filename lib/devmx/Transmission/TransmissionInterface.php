@@ -41,7 +41,7 @@ interface TransmissionInterface
     /**
      * waits until a line end and returns the data (blocking)
      */
-    public function receiveLine($length = 4096);
+    public function receiveLine($length = 4096, $lineEnd = "\n");
 
     /**
      * Returns all data currently on the stream (nonblocking)

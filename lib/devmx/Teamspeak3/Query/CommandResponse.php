@@ -42,7 +42,7 @@ class CommandResponse extends Response
      *
      * @var string
      */
-    protected $errorValues;
+    protected $extraMessage;
     
     /**
      *
@@ -51,12 +51,12 @@ class CommandResponse extends Response
      * @param int $errorID
      * @param string $errorMessage 
      */
-    public function __construct(Command $c, array $items, $errorID=0, $errorMessage="ok", $errorValues=array()) {
+    public function __construct(Command $c, array $items, $errorID=0, $errorMessage="ok", $extraMessage="" ) {
         $this->command = $c;
         $this->items = $items;
         $this->errorID = $errorID;
         $this->errorMessage = $errorMessage;
-        $this->errorValues = $errorValues;
+        $this->extraMessage = $extraMessage;
     }
     
     /**
@@ -78,7 +78,7 @@ class CommandResponse extends Response
      * Returns the extra message of the response (empty string if none as 
      * @return string 
      */
-    public function getExtraMessage() { return $this->getErrorValue('extra_message');}
+    public function getExtraMessage() { return $this->extraMessage;}
     
     public function errorOccured() {
         return ($this->errorID !== 0);
@@ -91,14 +91,6 @@ class CommandResponse extends Response
                                                 $this->errorMessage,
                                                 $this->command->getName()));
         }
-    }
-
-    public function getErrorValue( $name, $default='')
-    {
-        if(isset($this->errorValues[$name])) {
-            return $this->errorValues[$name];
-        }
-        return $default;
     }
     
     
