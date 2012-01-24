@@ -143,19 +143,19 @@ class TSWebViewer
     private function getServerData()
     {
         $this->serverinfo = $this->query->query("serverinfo");
-        if ($this->serverinfo->errorOccured()) throw new \RuntimeException("Error receiving serverinfo. Please check permissions");
+        if ($this->serverinfo->errorOccured()) throw new \RuntimeException("Error receiving serverinfo. " . $this->serverinfo->getErrorMessage());
 
         $this->channellist = $this->query->query("channellist", array(), array("limits", "flags", "voice", "icon"));
-        if ($this->channellist->errorOccured()) throw new \RuntimeException("Error receiving channellist. Please check permissions");
+        if ($this->channellist->errorOccured()) throw new \RuntimeException("Error receiving channellist. " . $this->channellist->getErrorMessage());
 
         $this->clientlist = $this->query->query("clientlist", array(), array("away", "voice", "info", "icon", "groups"));
-        if ($this->clientlist->errorOccured()) throw new \RuntimeException("Error receiving clientlist. Please check permissions");
+        if ($this->clientlist->errorOccured()) throw new \RuntimeException("Error receiving clientlist. " . $this->clientlist->getErrorMessage());
 
         $this->serverGroupList = $this->query->query("servergrouplist");
-        if ($this->serverGroupList->errorOccured()) throw new \RuntimeException("Error receiving servergouplist. Please check permissions");
+        if ($this->serverGroupList->errorOccured()) throw new \RuntimeException("Error receiving servergouplist. " . $this->serverGroupList->getErrorMessage());
 
         $this->channelGroupList = $this->query->query("channelgrouplist");
-        if ($this->channelGroupList->errorOccured()) throw new \RuntimeException("Error receiving channelgrouplist. Please check permissions");
+        if ($this->channelGroupList->errorOccured()) throw new \RuntimeException("Error receiving channelgrouplist. " . $this->channelGroupList->getErrorMessage());
     }
 
     /**
