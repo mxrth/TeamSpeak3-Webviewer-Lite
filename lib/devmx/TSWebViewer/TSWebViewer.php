@@ -260,8 +260,28 @@ class TSWebViewer
     {
         $serverItem = $this->serverinfo->getItem(0);
 
-        $html = '%s<span class="ts-image server-image">&nbsp;</span><span class="servername">%s</span>';
-        return sprintf($html, $this->renderServerIcon($serverItem), $this->Utf8ToHtml($serverItem['virtualserver_name']));
+        if ($this->renderOptions->connectLink())
+        {
+            $html = '%s<span class="ts-image server-image">&nbsp;</span><a href="%s"><span class="servername">%s</span></a>';
+            $tsLink = 'ts3server://%s?port=%s';
+            $targetLink = $this->renderOptions->connectLinkTarget();
+            
+            if(!$targetLink)
+            {
+                $tsLink = sprintf($tsLink, $this->host, $this->serverPort);
+            }
+            else
+            {
+                $tsLink = sprintf($tsLink, $this->renderOptions->connectLinkTarget(), $this->serverPort);
+            }
+            
+            return sprintf($html, $this->renderServerIcon($serverItem), $tsLink, $this->Utf8ToHtml($serverItem['virtualserver_name']));
+        }
+        else
+        {
+            $html = '%s<span class="ts-image server-image">&nbsp;</span><span class="servername">%s</span>';
+            return sprintf($html, $this->renderServerIcon($serverItem), $this->Utf8ToHtml($serverItem['virtualserver_name']));
+        }
     }
 
     /**

@@ -12,15 +12,17 @@ class RenderOptions
 
     protected $headTags = false;
     protected $renderServerQueryClients = false;
+    protected $connectLink = true;
+    protected $connectLinkTarget = false;
     protected $stylesheetURL = null;
     protected $imagePath = null;
     protected $divClass = "devmx-webviewer";
     protected $HTMLCaching = false;
     protected $HTMLCachingPath = "cache";
     protected $HTMLCachingTime = 180;
+    protected $imageCaching = false;
     protected $imageCachingPathServer = null;
     protected $imageCachingPathPublic = null;
-    protected $imageCaching;
 
     /**
      * Sets/ Gets if the viewer should be output as a standalone html page
@@ -46,6 +48,36 @@ class RenderOptions
     {
         if (empty($render)) return $this->renderServerQueryClients;
         else $this->renderServerQueryClients = $render;
+    }
+
+    /**
+     * If a link should be applied to the servername that you can directly connect to the server
+     * @param bool $addLink If a link should be applied to the servername [optional]
+     * @return bool If a link should be applied. Returns nothing if $addLink is set.
+     * @since 1.0
+     * @author Maximilian Narr
+     */
+    public function connectLink($addLink = null)
+    {
+        if (empty($addLink)) return $this->connectLink;
+        else $this->connectLink = $addLink;
+    }
+
+    /**
+     * If you have set 127.0.0.1 or localhost in the main config, you can set here the public ip of the server
+     * @param string $linkTarget Public ip adress or hostname of the teamspeak server
+     * @return string|bool If you set a custom adress before this will be returned else it returns false. If $linkTarget is set it returns nothing
+     * @since 1.0
+     * @author Maximilian Narr
+     */
+    public function connectLinkTarget($linkTarget = null)
+    {
+        if (empty($linkTarget))
+        {
+            if (is_string($this->connectLinkTarget)) return $this->connectLinkTarget;
+            else return false;
+        }
+        else $this->connectLinkTarget = (string)$linkTarget;
     }
 
     /**
@@ -131,6 +163,19 @@ class RenderOptions
     }
 
     /**
+     * If image caching should be used. Default: no
+     * @param bool|null $use True if image caching should be used, else false
+     * @return bool If image caching should be used
+     * @since 1.0
+     * @author Maximilian Narr
+     */
+    public function imageCaching($use = null)
+    {
+        if (empty($use)) return $this->imageCaching;
+        else $this->imageCaching = $use;
+    }
+
+    /**
      * Path to the image cache. The path must be on server side
      * @param string|null $path Serverside path to the image cache. If not null $path is the path where downloaded images should be cached. 
      * @return string Path of the image cache. Returns nothing if $path is not specified
@@ -164,19 +209,6 @@ class RenderOptions
             if (substr($path, -1) !== "/") $this->imageCachingPathPublic = $path . "/";
             else $this->imageCachingPathPublic = $path;
         }
-    }
-    
-    /**
-     * If image caching should be used. Default: no
-     * @param bool|null $use True if image caching should be used, else false
-     * @return bool If image caching should be used
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function imageCaching($use = null)
-    {
-        if(empty($use)) return $this->imageCaching;
-        else $this->imageCaching = $use;
     }
 
 }

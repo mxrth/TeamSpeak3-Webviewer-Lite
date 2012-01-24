@@ -21,4 +21,9 @@
     <!-- Password of the query user [optional] -->
     <!-- default: emtpy -->
     <password></password>
+    
+    
+    <!-- If the viewer should be cached (recommended) -->
+    <!-- default: true -->
+    <caching>true</caching>
 </config>

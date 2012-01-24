@@ -55,18 +55,27 @@ spl_autoload_register(function($class)
         });
 
 
-// Create viewer options
-$viewerOptions = new devmx\TSWebViewer\RenderOptions();
-$viewerOptions->stylesheetURL($rootDirPublic . "css/style.css");
-$viewerOptions->imageCaching(true);
-$viewerOptions->imageCachingPathPublic($rootDirPublic . "cache/");
-$viewerOptions->imageCachingPathServer($rootDirServer . "cache/");
-$viewerOptions->HTMLCachingPath($rootDirServer . "cache/");
-$viewerOptions->HTMLCachingTime(180);
-//$viewerOptions->HTMLCaching(true);
-
 // Load configuration file
 $config = simplexml_load_file($rootDirServer . "config.xml");
+
+// Apply render options options
+$viewerOptions = new devmx\TSWebViewer\RenderOptions();
+$viewerOptions->stylesheetURL($rootDirPublic . "css/style.css");
+$viewerOptions->connectLink(true);
+$viewerOptions->imgPath($rootDirPublic . "img");
+
+// If caching should be enabled
+if ((string) $config->caching == "true")
+{
+    $viewerOptions->imageCaching(true);
+    $viewerOptions->imageCachingPathPublic($rootDirPublic . "cache/");
+    $viewerOptions->imageCachingPathServer($rootDirServer . "cache/");
+    $viewerOptions->HTMLCachingPath($rootDirServer . "cache/");
+    $viewerOptions->HTMLCachingTime(180);
+    //$viewerOptions->HTMLCaching(true);
+}
+
+
 
 $host = (string) $config->host;
 $queryPort = (int) $config->queryport;
