@@ -14,7 +14,9 @@ namespace devmx\Teamspeak3;
  */
 class ServerGroup implements devmx\Teamspeak3\Node\ServerGroupInterface
 {
-    
+    const TYPE_TEMPLATE = 0;
+    const TYPE_REGULAR = 1;
+    const TYPE_QUERY = 2;
 }
 
 ?>

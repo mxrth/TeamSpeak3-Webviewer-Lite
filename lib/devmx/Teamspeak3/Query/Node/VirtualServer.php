@@ -177,10 +177,13 @@ class VirtualServer extends \devmx\Teamspeak3\VirtualServer
     public function createChannel( $data )
     {
         if($data instanceof \devmx\Teamspeak3\Channel) {
-            $this->createChannelWithData($data);
+            return $this->createChannelWithData($data);
         }
         elseif(is_string($data)) {
-            $this->createSimpleChannel($data);
+            return $this->createSimpleChannel($data);
+        }
+        else {
+            throw new \InvalidArgumentException('Cannot create channel with given data');
         }
     }
     
@@ -254,6 +257,26 @@ class VirtualServer extends \devmx\Teamspeak3\VirtualServer
         foreach($response->getItems() as $client) {
             $this->clients[$client['cid']] = new Client($this->query, $client);
         }
+    }
+    
+    /**
+     * @todo create from class
+     * @param ServerGroupInterface|String $identifyer 
+     */
+    public function createServerGroup( $identifyer , $type=\devmx\Teamspeak3\ServerGroup::TYPE_REGULAR)
+    {
+        if($identifyer instanceof \devmx\Teamspeak3\Node\ServerGroupInterface) {
+            throw new \LogicException('currently this feature is not implemented');
+            return $this->createServerGroupFromClass($identifyer,$type);
+        }
+        else {
+            return $this->createServerGroupFromName($identifyer,$type);
+        }
+    }
+    
+    protected function createServerGroupFromName($name,$type) {
+        $data = $this->query('servergroupadd', Array('name'=>$name, 'type'=>$type));
+        $this->serverGroups[] = new ServerGroup($data['sgid']);
     }
     
     /**

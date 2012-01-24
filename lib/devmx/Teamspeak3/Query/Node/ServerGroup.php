@@ -25,6 +25,10 @@ namespace devmx\Teamspeak3\Query\Node;
 class ServerGroup
 {
     
+    public function __construct($id) {
+        
+    }
+    
 }
 
 ?>

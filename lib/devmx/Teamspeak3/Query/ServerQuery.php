@@ -59,7 +59,7 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
      * @return \devmx\Teamspeak3\Query\CommandResponse
      */
     public function query($name, array $args=Array(), array $options=Array()) {
-        return $this->sendCommand(Command::simpleCommand($name, $args, $options));
+        return $this->sendCommand(new Command($name, $args, $options));
     }
     
     public function refreshWhoAmI() {
@@ -151,7 +151,7 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
         if($cid !== NULL) {
             $args['cid'] = $cid;
         }
-        $command = Command::simpleCommand('servernotifyregister', Array('event'=>$name));
+        $command = new Command('servernotifyregister', Array('event'=>$name));
         $response = $this->transport->sendCommand($command);
         if(!$response->errorOccured()) {
             throw new \RuntimeException("Cannot register for event $event");

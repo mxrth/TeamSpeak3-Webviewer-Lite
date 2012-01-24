@@ -44,14 +44,15 @@ class Uploader extends AbstractTransferer
     {
         $this->transmission = $transmission;
         $this->key = $key;
+        $this->data = $data;
     }
 
     public function transfer()
     {
         $bytesToSend = strlen($this->data);
         $this->transmission->establish();
-        $this->sendFull($key, strlen($key));
-        $this->sendFull($data, $bytesToSend);
+        $this->sendFull($this->key, strlen($this->key));
+        $this->sendFull($this->data, $bytesToSend);
         $this->transmission->close();
     }
 

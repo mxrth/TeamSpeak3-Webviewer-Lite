@@ -38,7 +38,11 @@ class CommandTranslator implements \devmx\Teamspeak3\Query\Transport\CommandTran
     {
         if (!$this->isValid($cmd))
         {
-            throw new \InvalidArgumentException("Invalid command " . $cmd->getName());
+            $msg = "Cannot translate invalid command";
+            if(is_string($cmd->getName())) {
+                $msg .= $cmd->getName();
+            }
+            throw new \InvalidArgumentException($msg);
         }
 
         $queryRepresentation = $cmd->getName() . " ";
@@ -150,7 +154,7 @@ class CommandTranslator implements \devmx\Teamspeak3\Query\Transport\CommandTran
             }
             if(is_array($param)) {
                 if(!$this->checkParamValues( $param)) {
-                return FALSE;
+                    return FALSE;
                 }
             }
             else {

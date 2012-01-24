@@ -160,7 +160,7 @@ class TCP implements TransmissionInterface
 
         if ($timeoutMicro < 0)
         {
-            $timoutMicro = $this->defaultTimeoutMicro;
+            $timeoutMicro = $this->defaultTimeoutMicro;
         }
 
         if ($timeoutSec < 0)
@@ -199,13 +199,18 @@ class TCP implements TransmissionInterface
      * @param int $lenght
      * @return string 
      */
-    public function receiveData($lenght = 4096)
+    public function receiveData($length = 4096, $maxTries=5, $timeoutSec=-1, $timeoutMicro=-1)
     {
         if (!$this->isEstablished()) throw new \RuntimeException("Connection not Established");
         $data = '';
-        while (strlen($data) < $lenght)
+        $tries = 0;
+        while (strlen($data) < $length)
         {
-            $data .= \fgets($this->stream);
+            $tries++;
+            if($tries > $maxTries) {
+                throw new \RuntimeException('Max tries exceeded');
+            }
+            $data .= \fgets($this->stream, $length);
         }
         return $data;
     }
@@ -225,7 +230,7 @@ class TCP implements TransmissionInterface
 
         if ($timeoutMicro < 0)
         {
-            $timoutMicro = $this->defaultTimeoutMicro;
+            $timeoutMicro = $this->defaultTimeoutMicro;
         }
 
         if ($timeoutSec < 0)
