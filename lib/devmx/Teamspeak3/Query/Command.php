@@ -30,7 +30,6 @@ class Command
 
     /**
      * A simple builder which drops support for multiple values of params
-     * @deprecated
      * @param string $name
      * @param array $options
      * @param array $params 
@@ -111,7 +110,7 @@ class Command
      */
     public function optionIsSet($name)
     {
-        return in_array( $name, $this->options );
+        return array_key_exists($name, $this->options);
     }
 
     /**
@@ -124,7 +123,17 @@ class Command
     public function getParameter($name, $else = NULL, $index = 0)
     {
         if(isset($this->parameters[$name])) {
-            return $this->parameters[$name];
+            if(  is_array( $this->parameters[$name]) ) {
+                if(isset($this->parameters[$name][$index])) {
+                    return $this->parameters[$name][$index];
+                }
+                else {
+                    return $else;
+                }
+            }
+            else {
+                return $this->parameters[$name];
+            }
         }
         else {
             return $else;

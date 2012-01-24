@@ -20,26 +20,50 @@
 // Check PHP version
 if (version_compare(phpversion(), "5.3.2", "<")) exit("PHP 5.3.2 or higher required.");
 
+// Set absolute directory of the server
 $rootDirServer = __DIR__ . "/";
+$rootDirPublic = "";
+
+// Set HTTP path to the webviewer
+if ((int) $_SERVER['SERVER_PORT'] == 80 || (int) $_SERVER['SERVER_PORT'] == 443)
+{
+    $url = $_SERVER['SERVER_NAME'] . $_SERVER['PHP_SELF'];
+}
+else
+{
+    $url = $_SERVER['SERVER_NAME'] . ":" . $_SERVER['SERVER_PORT'] . $_SERVER['PHP_SELF'];
+}
+
+if (empty($_SERVER['HTTPS']) || $_SERVER['HTTPS'] === '' || $_SERVER['HTTPS'] === "off")
+{
+    $rootDirPublic = "http://" . $url;
+}
+else
+{
+    $rootDirPublic = "https://" . $url;
+}
+
+// Replace file names
+$rootDirPublic = str_replace("TSViewer.php", "", $rootDirPublic);
 
 spl_autoload_register(function($class)
         {
             global $rootDirServer;
             $path = str_replace("\\", "/", $class);
-            $path = $rootDirServer . "src/" . $path . ".php";
+            $path = $rootDirServer . "lib/" . $path . ".php";
             if (\file_exists($path)) require_once $path;
         });
 
 
 // Create viewer options
 $viewerOptions = new devmx\TSWebViewer\RenderOptions();
-$viewerOptions->stylesheetURL("css/style.css");
+$viewerOptions->stylesheetURL($rootDirPublic . "css/style.css");
 $viewerOptions->imageCaching(true);
-$viewerOptions->imageCachingPathPublic("http://testing.devmx.de/maxe/TeamSpeak3-Webviewer-Lite/cache/");
+$viewerOptions->imageCachingPathPublic($rootDirPublic . "cache/");
 $viewerOptions->imageCachingPathServer($rootDirServer . "cache/");
-$viewerOptions->HTMLCachingPath($rootDirServer . "./cache/");
+$viewerOptions->HTMLCachingPath($rootDirServer . "cache/");
 $viewerOptions->HTMLCachingTime(180);
-$viewerOptions->HTMLCaching(true);
+//$viewerOptions->HTMLCaching(true);
 
 // Load configuration file
 $config = simplexml_load_file($rootDirServer . "config.xml");

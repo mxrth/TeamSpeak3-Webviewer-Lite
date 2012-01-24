@@ -91,7 +91,7 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
      * The regular expression for describing a response
      * @var string 
      */
-    protected $responseRegex = "/^(.*?[[:blank:]\r\n]?)(error (id=[0-9]* msg=[a-zA-Z\\\\]*.*))$/";
+    protected $responseRegex = "/^(.*?[[:blank:]\r\n]?)error id=([0-9]*) msg=([a-zA-Z\\\\]*)( failed_permid=([0-9]*))?$/";
 
     /**
      * Replaces all masked characters with their regular replacements (e.g. \\ with \)
@@ -151,9 +151,9 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         $parsed = Array();
 
         preg_match($this->responseRegex, $response, $parsed);
-        $error = $this->parseData($parsed[3]);
-        $errorID = $error[0]['id'];
-        $errorMessage = $error[0]['msg'];
+
+        $errorID = (int) $parsed[2]; // parsed[2] holds the error id
+        $errorMessage = $this->unEscape($parsed[3]); //parsed[4] hold the error string
 
         if ($parsed[1] !== '') // parsed[1] holds the data if it is a fetching command
         {
@@ -165,7 +165,17 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         }
 
 
-        $responseClass = new \devmx\Teamspeak3\Query\CommandResponse($cmd, $items, $errorID, $errorMessage, $error[0]);
+        if (isset($parsed[4])) //parsed[4] holds the whole key/value pair of the extramessage
+        {
+            $extra = $parsed[5]; //parsed[5] holds the pure extramessage
+        }
+        else
+        {
+            $extra = '';
+        }
+
+
+        $responseClass = new \devmx\Teamspeak3\Query\CommandResponse($cmd, $items, $errorID, $errorMessage, $extra);
         $responseClass->setRawResponse($response);
         return $responseClass;
     }
@@ -183,6 +193,8 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         $reason = $this->parseValue($event[0]); //the eventtype or eventreason is a single word at the beginnning of the event
         $event = $event[1];
         $data = $this->parseData($event); //the rest is a single block of data
+        $data = $data[0]; //because we have just one block (no |) we can use data[0]
+
 
         $eventClass = new \devmx\Teamspeak3\Query\Event($reason, $data);
         $eventClass->setRawResponse($event);
@@ -257,7 +269,7 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
      */
     public function isCompleteEvent($raw)
     {
-        if ($raw[strlen($raw)-1] === self::SEPERATOR_RESPONSE)
+        if (\trim($raw) !== '')
         {
             return TRUE;
         }
@@ -288,7 +300,7 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
     /**
      * Parses Events coming from the query
      * @param string $raw
-     * @return array array of \devmx\Teamspeak3\Query\Event
+     * @return \devmx\Teamspeak3\Query\Response 
      */
     public function getEventInstances($raw)
     {
