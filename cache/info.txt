@@ -1,3 +1,0 @@
-make this directory writable!
-Otherwise wise will not work!
-See http://devmx.de for further instructions!
