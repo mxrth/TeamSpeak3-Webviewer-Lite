@@ -239,7 +239,10 @@ class TSWebViewer
         // If file needs to be cached
         if ($this->renderOptions->HTMLCaching())
         {
-            /** @todo Check if writable */
+            // Check if files are writable
+            $this->checkFilePermissions($htmlFile);
+            $this->checkFilePermissions($timeFile);
+            
             file_put_contents($htmlFile, $html);
             file_put_contents($timeFile, time());
         }
@@ -593,8 +596,10 @@ class TSWebViewer
             // If it needs to be downloaded
             else
             {
-                $img = $this->downloadServerIcon($iconId);
-                /** @todo check if writable */
+                // Check if path is writable
+                $this->checkFilePermissions($imagePathServer);
+                
+                $img = $this->downloadServerIcon($iconId); 
                 file_put_contents($imagePathServer . $iconId . ".png", $img);
                 return $imagePathPublic . $iconId . ".png";
             }
@@ -742,7 +747,7 @@ class TSWebViewer
      * @author silverbeat
      * @since 1.0
      */
-    function Utf8ToHtml($utf8, $encodeTags = true)
+    private function Utf8ToHtml($utf8, $encodeTags = true)
     {
         $result = '';
         for ($i = 0; $i < strlen($utf8); $i++)
@@ -790,6 +795,18 @@ class TSWebViewer
             }
         }
         return $result;
+    }
+
+    /**
+     * This function checkts if the path provided in $path is writabe
+     * @param type $path Path  which should be checked
+     * @throws \RuntimeException If a path is not writable.
+     * @author Maximilian Narr
+     * @since 1.0
+     */
+    private function checkFilePermissions($path)
+    {
+        if (!empty($path) && !is_writable($path)) throw new \RuntimeException("$path is not writable. Please check permissions");
     }
 
     /**

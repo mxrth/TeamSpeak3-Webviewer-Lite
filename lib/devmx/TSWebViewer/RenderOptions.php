@@ -22,8 +22,8 @@ class RenderOptions
     protected $HTMLCachingPath = "cache";
     protected $HTMLCachingTime = 180;
     protected $imageCaching = false;
-    protected $imageCachingPathServer = null;
-    protected $imageCachingPathPublic = null;
+    protected $imageCachingPathServer = "cache";
+    protected $imageCachingPathPublic = "cache";
 
     /**
      * Sets/ Gets if the viewer should be output as a standalone html page
