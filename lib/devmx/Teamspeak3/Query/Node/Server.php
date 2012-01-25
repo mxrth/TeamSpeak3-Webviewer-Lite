@@ -145,7 +145,7 @@ class Server extends \devmx\Teamspeak3\Server
      * @return boolean
      */
     protected function requestedServerList() {
-        return $this->requestedServerlist || $virtualServers == Array();
+        return $this->requestedServerlist || $this->virtualServers == Array();
     }
     
     /**

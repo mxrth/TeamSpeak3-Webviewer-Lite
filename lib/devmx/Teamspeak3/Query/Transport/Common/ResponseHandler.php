@@ -17,8 +17,6 @@
   along with TeamSpeak3 Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(encoding = "UTF-8");
-
 namespace devmx\Teamspeak3\Query\Transport\Common;
 
 /**
@@ -88,10 +86,10 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
     );
 
     /**
-     * The regular expression for describing a response
-     * @var string 
+     * The regular expression to describe the error block of a response
+     * @var string
      */
-    protected $responseRegex = "/^(.*?[[:blank:]\r\n]?)error id=([0-9]*) msg=([a-zA-Z\\\\]*)( failed_permid=([0-9]*))?$/";
+    protected $errorRegex = "/error id=[0-9]* msg=[a-zA-Z\\\\]*/";
 
     /**
      * Replaces all masked characters with their regular replacements (e.g. \\ with \)
@@ -120,18 +118,25 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         $raw = \trim($raw, "\r\n");
         $parsed = \explode(self::SEPERATOR_RESPONSE, $raw);
 
-        $error = \array_pop($parsed); //the last element is our error message
-        $response['response'] = $this->parseResponse($cmd, $error);
+        //find error message
+        foreach($parsed as $key=>$value) {
+            if($this->match($this->errorRegex, $value)) {
+                $error = $value;
+                unset($parsed[$key]);
+                break;
+            }
+        }
+        $data = '';
         foreach($parsed as $part) {
             if(substr($part, 0, strlen($this->getEventPrefix())) === $this->getEventPrefix()) {
                 $response['events'][] = $this->parseEvent($part);
             }
             else {
-                $response['response'] = $this->parseResponse($cmd, $part.$error);
+                $data = $part;
             }
         }
         
-
+        $response['response'] = $this->parseResponse($cmd, $error, $data);
         return $response;
     }
     
@@ -146,18 +151,15 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
      * @param string $response
      * @return \devmx\Teamspeak3\Query\Response 
      */
-    protected function parseResponse(\devmx\Teamspeak3\Query\Command $cmd, $response)
+    protected function parseResponse(\devmx\Teamspeak3\Query\Command $cmd, $error, $data='')
     {
-        $parsed = Array();
+        $parsedError = $this->parseData($error);
+        $errorID = $parsedError[0]['id'];
+        $errorMessage = $parsedError[0]['msg'];
 
-        preg_match($this->responseRegex, $response, $parsed);
-
-        $errorID = (int) $parsed[2]; // parsed[2] holds the error id
-        $errorMessage = $this->unEscape($parsed[3]); //parsed[4] hold the error string
-
-        if ($parsed[1] !== '') // parsed[1] holds the data if it is a fetching command
+        if ($data !== '') // parsed[1] holds the data if it is a fetching command
         {
-            $items = $this->parseData($parsed[1]);
+            $items = $this->parseData($data);
         }
         else
         {
@@ -165,18 +167,8 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         }
 
 
-        if (isset($parsed[4])) //parsed[4] holds the whole key/value pair of the extramessage
-        {
-            $extra = $parsed[5]; //parsed[5] holds the pure extramessage
-        }
-        else
-        {
-            $extra = '';
-        }
-
-
-        $responseClass = new \devmx\Teamspeak3\Query\CommandResponse($cmd, $items, $errorID, $errorMessage, $extra);
-        $responseClass->setRawResponse($response);
+        $responseClass = new \devmx\Teamspeak3\Query\CommandResponse($cmd, $items, $errorID, $errorMessage, $parsedError[0]);
+        $responseClass->setRawResponse($data."\n".$error);
         return $responseClass;
     }
 
@@ -188,13 +180,10 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
     protected function parseEvent($event)
     {
         $reason = '';
-        $eventObject = NULL;
         $event = explode(self::SEPERAOR_DATA, $event, 2);
         $reason = $this->parseValue($event[0]); //the eventtype or eventreason is a single word at the beginnning of the event
         $event = $event[1];
         $data = $this->parseData($event); //the rest is a single block of data
-        $data = $data[0]; //because we have just one block (no |) we can use data[0]
-
 
         $eventClass = new \devmx\Teamspeak3\Query\Event($reason, $data);
         $eventClass->setRawResponse($event);
@@ -244,11 +233,11 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         {
             return (int) $val;
         }
-        if (\preg_match("/^true$/Di", $val) === 1)
+        if ($this->match("/^true$/Di", $val))
         {
             return TRUE;
         }
-        if (\preg_match("/^false$/Di", $val) === 1)
+        if ($this->match("/^false$/Di", $val))
         {
             return FALSE;
         }
@@ -269,7 +258,7 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
      */
     public function isCompleteEvent($raw)
     {
-        if (\trim($raw) !== '')
+        if ($raw !== '' && $raw[strlen($raw)-1] === self::SEPERATOR_RESPONSE)
         {
             return TRUE;
         }
@@ -287,7 +276,7 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
      */
     public function isCompleteResponse($raw)
     {
-        if (\preg_match("/error id=[0-9]* msg=/", $raw))
+        if ($this->match($this->errorRegex, $raw) && $raw[strlen($raw)-1] == "\n")
         {
             return TRUE;
         }
@@ -300,11 +289,11 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
     /**
      * Parses Events coming from the query
      * @param string $raw
-     * @return \devmx\Teamspeak3\Query\Response 
+     * @return array array of \devmx\Teamspeak3\Query\Event
      */
     public function getEventInstances($raw)
     {
-        $events = \explode(self::SEPERATOR_RESPONSE, $raw);
+        $events = \explode(self::SEPERATOR_RESPONSE, rtrim($raw));
         foreach ($events as $rawevent)
         {
             $ret[] = $this->parseEvent($rawevent);
@@ -338,6 +327,21 @@ class ResponseHandler implements \devmx\Teamspeak3\Query\Transport\ResponseHandl
         {
             return TRUE;
         }
+    }
+    
+    private function match($regex, $raw, $exceptionOnFail=false) {
+        $parsed = array();
+        $matched = preg_match($regex, $raw, $parsed);
+        if(  preg_last_error() !== PREG_NO_ERROR) {
+            throw new \RuntimeException('Error while using preg_match try to increase your pcre.backtrack_limit '. "\n". $raw, preg_last_error());
+        }
+        if($matched === 0) {
+            if($exceptionOnFail) {
+                throw new \InvalidArgumentException('Cannot parse '.$raw);
+            }
+            return false;
+        }
+        return $parsed;
     }
 
 }

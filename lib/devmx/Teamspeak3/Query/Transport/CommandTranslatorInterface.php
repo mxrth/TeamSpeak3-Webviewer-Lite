@@ -17,8 +17,6 @@
   along with TeamSpeak3 Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(encoding = "UTF-8");
-
 namespace devmx\Teamspeak3\Query\Transport;
 
 use devmx\Teamspeak3\Query\Command;

@@ -17,8 +17,6 @@
   along with TeamSpeak3 Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(encoding = "UTF-8");
-
 namespace devmx\Teamspeak3\Query;
 
 /**
@@ -70,7 +68,7 @@ class Response implements \ArrayAccess, \Iterator, \Countable
      * @param misc $else
      * @return misc 
      */
-    public function getValue($index, $name, $else = NULL)
+    public function getValue($name, $index=0, $else = NULL)
     {
         if (isset($this->items[$index][$name])) return $this->items[$index][$name];
         else return $else;
@@ -111,6 +109,9 @@ class Response implements \ArrayAccess, \Iterator, \Countable
 
     public function offsetExists($offset)
     {
+        if(is_string($offset) && isset($this->items[0][$offset])) {
+            return true;
+        }
         return isset($this->items[$offset]);
     }
 
@@ -121,6 +122,9 @@ class Response implements \ArrayAccess, \Iterator, \Countable
 
     public function offsetGet($offset)
     {
+        if(is_string($offset) && isset($this->items[0][$offset])) {
+            return $this->items[0][$offset];
+        }
         return isset($this->items[$offset]) ? $this->items[$offset] : null;
     }
 

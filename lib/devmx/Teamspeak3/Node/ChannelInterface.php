@@ -365,13 +365,13 @@ interface ChannelInterface extends NodeInterface
      * @since 1.0
      * @return bool If the speech data of the  is encrypted 
      */
-    public function isSpeechDataEncrypted();
+    public function isSpeechDataUnencrypted();
 
     /**
      * @since 1.0
      * @param bool $isSpeechDataEncrypted If the speech data of the  is encrypted
      */
-    public function setIsSpeechDataEncrypted($isSpeechDataEncrypted);
+    public function setIsSpeechDataUnencrypted($isSpeechDataEncrypted);
 
     
     /**

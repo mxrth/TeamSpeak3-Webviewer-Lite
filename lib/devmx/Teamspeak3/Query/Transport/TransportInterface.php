@@ -17,8 +17,6 @@
   along with TeamSpeak3 Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(encoding = "UTF-8");
-
 namespace devmx\Teamspeak3\Query\Transport;
 
 /**
@@ -54,7 +52,7 @@ interface TransportInterface
     public function sendCommand(\devmx\Teamspeak3\Query\Command $command);
     
     /**
-     * Wrapper for Command::simpleCommand and sendcommand
+     * Wrapper for new Command and sendcommand
      * @return \devmx\Teamspeak3\Query\CommandResponse
      */
     public function query($name, array $args=Array(),array $options=Array());

@@ -17,8 +17,6 @@
   along with TeamSpeak3 Library. If not, see <http://www.gnu.org/licenses/>.
  */
 
-declare(encoding = "UTF-8");
-
 namespace devmx\Transmission;
 
 /**
@@ -58,6 +56,8 @@ class TCP implements TransmissionInterface
     protected $stream;
     
     protected $isConnected = false;
+    
+    protected $maxTries = -1;
 
     /**
      *
@@ -160,7 +160,7 @@ class TCP implements TransmissionInterface
 
         if ($timeoutMicro < 0)
         {
-            $timoutMicro = $this->defaultTimeoutMicro;
+            $timeoutMicro = $this->defaultTimeoutMicro;
         }
 
         if ($timeoutSec < 0)
@@ -192,6 +192,14 @@ class TCP implements TransmissionInterface
         \stream_set_blocking($this->stream, self::BLOCKING);
         return $data;
     }
+    
+    public function setMaxTries($tries) {
+        $this->maxTries = $tries;
+    }
+    
+    public function getMaxTries() {
+        return $this->maxTries;
+    }
 
     /**
      * Receives data with the given length
@@ -199,13 +207,18 @@ class TCP implements TransmissionInterface
      * @param int $lenght
      * @return string 
      */
-    public function receiveData($lenght = 4096)
+    public function receiveData($length = 4096, $timeoutSec=-1, $timeoutMicro=-1)
     {
         if (!$this->isEstablished()) throw new \RuntimeException("Connection not Established");
         $data = '';
-        while (strlen($data) < $lenght)
+        $tries = 0;
+        while (strlen($data) < $length)
         {
-            $data .= \fgets($this->stream);
+            $tries++;
+            if($this->maxTries > 0 && $tries > $this->maxTries) {
+                throw new \RuntimeException('Max tries exceeded');
+            }
+            $data .= \fgets($this->stream, $length);
         }
         return $data;
     }
@@ -225,7 +238,7 @@ class TCP implements TransmissionInterface
 
         if ($timeoutMicro < 0)
         {
-            $timoutMicro = $this->defaultTimeoutMicro;
+            $timeoutMicro = $this->defaultTimeoutMicro;
         }
 
         if ($timeoutSec < 0)

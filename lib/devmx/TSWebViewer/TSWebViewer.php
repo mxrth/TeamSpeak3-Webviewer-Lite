@@ -194,14 +194,13 @@ class TSWebViewer
         {
             $this->establishConnection();
             $this->getServerData();
-            //$this->closeConnection();
 
-            echo('<pre>');
+            //echo('<pre>');
             //var_dump($this->channellist);
             //var_dump($this->clientlist);
             //var_dump($this->channelGroupList);
             //var_dump($this->serverGroupList);
-            echo('</pre>');
+            //echo('</pre>');
         }
         catch (\RuntimeException $ex)
         {
@@ -240,6 +239,7 @@ class TSWebViewer
         // If file needs to be cached
         if ($this->renderOptions->HTMLCaching())
         {
+            /** @todo Check if writable */
             file_put_contents($htmlFile, $html);
             file_put_contents($timeFile, time());
         }
@@ -594,6 +594,7 @@ class TSWebViewer
             else
             {
                 $img = $this->downloadServerIcon($iconId);
+                /** @todo check if writable */
                 file_put_contents($imagePathServer . $iconId . ".png", $img);
                 return $imagePathPublic . $iconId . ".png";
             }
