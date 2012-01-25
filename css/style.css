@@ -92,7 +92,7 @@
 .devmx-webviewer .channel-password-right,
 .devmx-webviewer * .channel-password-right
 {
-    background-image: url("../img/channel-password-right.png");
+    background-image: url("../img/channel-password-right.png"); 
 }
 
 /* Default channel */
