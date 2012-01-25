@@ -387,6 +387,12 @@ class TSWebViewer
         $style = '<span class="ts-image image-right %s">&nbsp;</span>';
         $data = "";
 
+        // Check if channel has a password
+        if($channelItem['channel_flag_password'] == 1)
+        {
+            $data .= sprintf($style, "channel-password-right");
+        }
+        
         // Check if channel is home channel
         if ($channelItem['channel_flag_default'] == 1)
         {

@@ -81,11 +81,18 @@
     background-image: url("../img/channel-full.png");
 }
 
-/* Channel with password */
+/* Channel with password (channel Icon) */
 .devmx-webviewer .channel-password,
 .devmx-webviewer * .channel-password
 {
     background-image: url("../img/channel-password.png");
+}
+
+/* Channel with password (Lock icon) */
+.devmx-webviewer .channel-password-right,
+.devmx-webviewer * .channel-password-right
+{
+    background-image: url("../img/channel-password-right.png");
 }
 
 /* Default channel */
