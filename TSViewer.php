@@ -1,7 +1,7 @@
 <?php
 
 /**
- *  This file is part of devMX Webviewer Lite.
+ *  This file is part of devMX TS3 Webviewer Lite.
  *  Copyright (C) 2012  Maximilian Narr
  *
  *  devMX Webviewer Lite is free software: you can redistribute it and/or modify
@@ -15,7 +15,7 @@
  *  GNU General Public License for more details.
  *
  *  You should have received a copy of the GNU General Public License
- *  along with devMX Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
+ *  along with devMX TS3 Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
  */
 // Check PHP version
 if (version_compare(phpversion(), "5.3.2", "<")) exit("PHP 5.3.2 or higher required.");
