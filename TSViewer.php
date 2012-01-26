@@ -45,6 +45,7 @@ else
 
 // Replace file names
 $rootDirPublic = str_replace("TSViewer.php", "", $rootDirPublic);
+$rootDirPublic = str_replace("index.php", "", $rootDirPublic);
 
 spl_autoload_register(function($class)
         {
