@@ -1,5 +1,5 @@
-Installation
-============
+devMX TS3 Webviewer Lite - Installation
+=======================================
 
 Please follow the installation instruction:
 Bitte befolden Sie die Installationsanweisungen:
