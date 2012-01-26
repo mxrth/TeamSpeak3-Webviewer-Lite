@@ -68,9 +68,9 @@ $viewerOptions->imgPath($rootDirPublic . "img");
 if ((string) $config->caching == "true")
 {
     $viewerOptions->imageCaching(true);
-    $viewerOptions->imageCachingPathPublic($rootDirPublic . "cache/");
-    $viewerOptions->imageCachingPathServer($rootDirServer . "cache/");
-    $viewerOptions->HTMLCachingPath($rootDirServer . "cache/");
+    $viewerOptions->imageCachingPathPublic($rootDirPublic . "cache");
+    $viewerOptions->imageCachingPathServer($rootDirServer . "cache");
+    $viewerOptions->HTMLCachingPath($rootDirServer . "cache");
     $viewerOptions->HTMLCachingTime(180);
     $viewerOptions->HTMLCaching(true);
 }

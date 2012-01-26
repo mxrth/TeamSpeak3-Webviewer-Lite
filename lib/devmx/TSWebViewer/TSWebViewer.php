@@ -240,8 +240,7 @@ class TSWebViewer
         if ($this->renderOptions->HTMLCaching())
         {
             // Check if files are writable
-            $this->checkFilePermissions($htmlFile);
-            $this->checkFilePermissions($timeFile);
+            $this->checkFilePermissions($cachePath);
             
             file_put_contents($htmlFile, $html);
             file_put_contents($timeFile, time());
