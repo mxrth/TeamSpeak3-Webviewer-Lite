@@ -197,12 +197,12 @@ class TSWebViewer
 
 
 
-            echo('<pre>');
+            ///echo('<pre>');
             //var_dump($this->channellist);
-            var_dump($this->clientlist);
+            //var_dump($this->clientlist);
             //var_dump($this->channelGroupList);
             //var_dump($this->serverGroupList);
-            echo('</pre>');
+            //echo('</pre>');
 
             // Sort clientlist
             $this->sortClientList();
