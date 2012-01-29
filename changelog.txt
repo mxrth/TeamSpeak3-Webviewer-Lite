@@ -8,5 +8,8 @@
 ~ Minor Change
 * Fix
 
+v1.1
+* Issue #2: If a client has a client icon only the clienticon and not the group icons were shown.
+
 v1.0
 ! initial release

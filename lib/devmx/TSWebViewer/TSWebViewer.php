@@ -241,7 +241,7 @@ class TSWebViewer
         {
             // Check if files are writable
             $this->checkFilePermissions($cachePath);
-            
+
             file_put_contents($htmlFile, $html);
             file_put_contents($timeFile, time());
         }
@@ -387,11 +387,11 @@ class TSWebViewer
         $data = "";
 
         // Check if channel has a password
-        if($channelItem['channel_flag_password'] == 1)
+        if ($channelItem['channel_flag_password'] == 1)
         {
             $data .= sprintf($style, "channel-password-right");
         }
-        
+
         // Check if channel is home channel
         if ($channelItem['channel_flag_default'] == 1)
         {
@@ -479,7 +479,7 @@ class TSWebViewer
         {
             $clientIconId = $clientItem['client_icon_id'];
 
-            $data = $this->renderIcon($clientIconId);
+            $data = $this->renderIcon($clientIconId) . $data;
         }
 
         return $data;
@@ -603,8 +603,8 @@ class TSWebViewer
             {
                 // Check if path is writable
                 $this->checkFilePermissions($imagePathServer);
-                
-                $img = $this->downloadServerIcon($iconId); 
+
+                $img = $this->downloadServerIcon($iconId);
                 file_put_contents($imagePathServer . $iconId . ".png", $img);
                 return $imagePathPublic . $iconId . ".png";
             }
