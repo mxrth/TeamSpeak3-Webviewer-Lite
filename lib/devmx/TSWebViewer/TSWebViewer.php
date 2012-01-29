@@ -195,12 +195,17 @@ class TSWebViewer
             $this->establishConnection();
             $this->getServerData();
 
-            //echo('<pre>');
+
+
+            echo('<pre>');
             //var_dump($this->channellist);
-            //var_dump($this->clientlist);
+            var_dump($this->clientlist);
             //var_dump($this->channelGroupList);
             //var_dump($this->serverGroupList);
-            //echo('</pre>');
+            echo('</pre>');
+
+            // Sort clientlist
+            $this->sortClientList();
         }
         catch (\RuntimeException $ex)
         {
@@ -433,6 +438,9 @@ class TSWebViewer
         else if ($clientItem['client_output_muted'] == (int) 1) return "client-output-muted";
         else if ($clientItem['client_input_hardware'] == (int) 0) return "client-input-muted-hardware";
         else if ($clientItem['client_output_hardware'] == (int) 0) return "client-output-muted-hardware";
+        else if ($clientItem['client_flag_talking'] == (int) 1 && $clientItem['client_is_channel_commander'] == (int) 1) return "client-channel-commander-talking";
+        else if ($clientItem['client_is_channel_commander'] == (int) 1) return "client-channel-commander";
+        else if ($clientItem['client_flag_talking'] == (int) 1) return "client-talking";
         else return "client-normal";
     }
 
@@ -741,6 +749,70 @@ class TSWebViewer
             }
             return $html;
         }
+    }
+
+    /**
+     * Sorts the clientlist like in the TSClient
+     * @since 1.1
+     * @author Maximilian Narr
+     */
+    private function sortClientList()
+    {
+        $clientlistItems = $this->clientlist->getItems();
+        usort($clientlistItems, array($this, 'sortClientListTSStyle'));
+        $this->clientlist->setItems($clientlistItems);
+    }
+
+    /**
+     * Sorting function to sort clientlist like in TSClient
+     * @param type $a
+     * @param type $b
+     * @return int 
+     * @see https://github.com/devMX/TeamSpeak3-Webviewer/blob/master/core/teamspeak/teamspeak.func.php#L27
+     * @since 1.1
+     * @author Max Rath
+     */
+    private function sortClientListTSStyle($a, $b)
+    {
+        if ($a['client_talk_power'] > $b['client_talk_power'])
+        {
+            return -1;
+        }
+        else if ($a['client_talk_power'] < $b['client_talk_power'])
+        {
+            return 1;
+        }
+        else
+        {
+            if
+            ($a['client_is_talker'] == 1 && $b['client_is_talker'] == 0)
+            {
+                return -1;
+            }
+            else if
+            ($a['client_is_talker'] == 0 && $b['client_is_talker'] == 1)
+            {
+                return 1;
+            }
+            else
+            {
+                return $this->sortClientListByName($a, $b);
+            }
+        }
+    }
+
+    /**
+     * Sorting function to sort clientlist by clientname
+     * @param type $a
+     * @param type $b
+     * @return int
+     * @see https://github.com/devMX/TeamSpeak3-Webviewer/blob/master/core/teamspeak/teamspeak.func.php#L27
+     * @since 1.1
+     * @author Max Rath
+     */
+    private function sortClientListByName($a, $b)
+    {
+        return strcasecmp($a['client_nickname'], $b['client_nickname']);
     }
 
     /**

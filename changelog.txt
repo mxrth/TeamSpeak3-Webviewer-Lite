@@ -9,7 +9,9 @@
 * Fix
 
 v1.1
+~ Issue #4: Added support of additional client states, like channelcommander, talking client, ...
 * Issue #2: If a client has a client icon only the clienticon and not the group icons were shown.
+* Issue #3: Fixed but that clients weren't sorted like in the TSClient
 
 v1.0
 ! initial release

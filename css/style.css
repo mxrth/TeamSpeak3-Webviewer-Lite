@@ -151,6 +151,26 @@
     background-image: url("../img/normal-client.png");
 }
 
+/* talking client */
+.devmx-webviewer .client-talking,
+.devmx-webviewer * .client-talking
+{
+    background-image: url("../img/client-talking.png");
+}
+
+/* channelcommander */
+.devmx-webviewer .client-channel-commander,
+.devmx-webviewer * .client-channel-commander
+{
+    background-image: url("../img/client-channel-commander.png");
+}
+
+.devmx-webviewer .client-channel-commander-talking,
+.devmx-webviewer * .client-channel-commander-talking
+{
+    background-image: url("../img/client-channel-commander-talking.png");
+}
+
 /* mic muted client */
 .devmx-webviewer .client-input-muted,
 .devmx-webviewer * .client-input-muted
