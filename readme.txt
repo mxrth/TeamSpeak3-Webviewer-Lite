@@ -1,7 +1,5 @@
-devMX TS3 Webviewer Lite - Installation
-=======================================
+devMX TeamSpeak3 Webviewer Lite
+===============================
 
-Please follow the installation instructions:
-Bitte befolden Sie die Installationsanweisungen:
-
-http://devmx.de/software/teamspeak3-webviewer-lite/dokumentation-installation
+Please follow the installation instructions here:
+http://devmx.de/en/software/teamspeak3-webviewer-lite/dokumentation-installation
