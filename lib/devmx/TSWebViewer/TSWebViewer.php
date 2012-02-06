@@ -171,23 +171,13 @@ class TSWebViewer
         $this->renderTime = microtime(true);
         $this->renderOptions = $renderOptions;
 
-        $cachePath = $this->renderOptions->HTMLCachingPath();
-        $cacheTime = $this->renderOptions->HTMLCachingTime();
-        $htmlFile = $cachePath . "/" . md5($this->host . $this->queryPort . $this->serverPort) . ".cache";
-        $timeFile = $cachePath . "/" . md5($this->host . $this->queryPort . $this->serverPort) . ".time";
-
         // If caching should be used
         if ($this->renderOptions->HTMLCaching())
         {
-            // If both files are existing
-            if (file_exists($htmlFile) && file_exists($timeFile))
-            {
-                // Cache not expired
-                if (time() - file_get_contents($timeFile) <= $cacheTime)
-                {
-                    return file_get_contents($htmlFile);
-                }
-            }
+            $HTMLCachingHandler = $this->renderOptions->HTMLCachingHandler();
+            $key = md5($this->host . $this->queryPort . $this->serverPort);
+
+            if ($HTMLCachingHandler->isCached($key)) return $HTMLCachingHandler->getCache($key);
         }
 
         try
@@ -203,7 +193,6 @@ class TSWebViewer
             //var_dump($this->channelGroupList);
             //var_dump($this->serverGroupList);
             //echo('</pre>');
-
             // Sort clientlist
             $this->sortClientList();
         }
@@ -244,11 +233,7 @@ class TSWebViewer
         // If file needs to be cached
         if ($this->renderOptions->HTMLCaching())
         {
-            // Check if files are writable
-            $this->checkFilePermissions($cachePath);
-
-            file_put_contents($htmlFile, $html);
-            file_put_contents($timeFile, time());
+            $HTMLCachingHandler->cache(md5($this->host . $this->queryPort . $this->serverPort), $html);
         }
 
         $this->renderTimeEnd = microtime(true);
@@ -586,7 +571,6 @@ class TSWebViewer
     private function manageImageCaching($iconId)
     {
         $useImageCaching = $this->renderOptions->imageCaching();
-        $imagePathServer = $this->renderOptions->imageCachingPathServer();
         $imagePathPublic = $this->renderOptions->imageCachingPathPublic();
 
         $cssDataBase64 = "data:image/png;base64,%s";
@@ -599,21 +583,20 @@ class TSWebViewer
         // If image caching should be used
         else
         {
-            if (empty($imagePathPublic) || empty($imagePathServer)) throw new \RuntimeException('$imagePathPublic or $imagePathServer is not specified in the renderOptions. Please set it.');
+            $imageCachingHandler = $this->renderOptions->ImageCachingHandler();
+
+            if (empty($imagePathPublic)) throw new \RuntimeException('$imagePathPublic is not specified in the renderOptions. Please set it.');
 
             // If image is already cached
-            if (file_exists($imagePathServer . $iconId . ".png"))
+            if ($imageCachingHandler->isCached($iconId . ".png"))
             {
                 return $imagePathPublic . $iconId . ".png";
             }
             // If it needs to be downloaded
             else
             {
-                // Check if path is writable
-                $this->checkFilePermissions($imagePathServer);
-
                 $img = $this->downloadServerIcon($iconId);
-                file_put_contents($imagePathServer . $iconId . ".png", $img);
+                $imageCachingHandler->cache($iconId . ".png", $img, 0);
                 return $imagePathPublic . $iconId . ".png";
             }
         }

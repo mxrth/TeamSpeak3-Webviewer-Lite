@@ -37,11 +37,18 @@ class RenderOptions
     protected $downloadCustomImages = true;
     protected $divClass = "devmx-webviewer";
     protected $HTMLCaching = false;
-    protected $HTMLCachingPath = "cache";
-    protected $HTMLCachingTime = 180;
+
+    /**
+     * @var \devmx\TSWebViewer\Caching\CachingInterface
+     */
+    protected $HTMLCachingHandler = null;
     protected $imageCaching = false;
-    protected $imageCachingPathServer = "cache";
     protected $imageCachingPathPublic = "cache";
+
+    /**
+     * @var \devmx\TSWebViewer\Caching\CachingInterface
+     */
+    protected $imageCachingHandler = null;
 
     /**
      * Sets/ Gets if the viewer should be output as a standalone html page
@@ -221,42 +228,22 @@ class RenderOptions
     }
 
     /**
-     * Path where the HTML should be cached
-     * @param string|null $path Path where the HTML should be cached.
-     * @return string Path where HTML should be cached. If $path is set it will set $HTMLCachingPath before
-     * @since 1.0
+     * Handler which handles the HTML Caching
+     * @param \devmx\TSWebViewer\Caching\CachingInterface $handler Caching handler
+     * @return \devmx\TSWebViewer\Caching\CachingInterface If $handler is specified it will set it before
+     * @since 1.1
      * @author Maximilian Narr
      */
-    public function HTMLCachingPath($path = null)
+    public function HTMLCachingHandler($handler = null)
     {
-        if (is_null($path))
+        if (is_null($handler))
         {
-            return $this->HTMLCachingPath;
+            return $this->HTMLCachingHandler;
         }
         else
         {
-            $this->HTMLCachingPath = $path;
-            return $this->HTMLCachingPath;
-        }
-    }
-
-    /**
-     * How long the HTML should be cached
-     * @param int|null $time Time in seconds how long the HTML should be cached. 
-     * @return int Time in seconds how long the HTML Should be cached. If $time is specified it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function HTMLCachingTime($time = null)
-    {
-        if (is_null($time))
-        {
-            return $this->HTMLCachingTime;
-        }
-        else
-        {
-            $this->HTMLCachingTime = $time;
-            return $this->HTMLCachingTime;
+            $this->HTMLCachingHandler = $handler;
+            return $this->HTMLCachingHandler;
         }
     }
 
@@ -281,25 +268,6 @@ class RenderOptions
     }
 
     /**
-     * Path to the image cache. The path must be on server side
-     * @param string|null $path Serverside path to the image cache. If not null $path is the path where downloaded images should be cached
-     * @return string Path of the image cache. If $path is specified it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     * @example /var/www/imagecache/
-     */
-    public function imageCachingPathServer($path = null)
-    {
-        if (is_null($path)) return $this->imageCachingPathServer;
-        else
-        {
-            if (substr($path, -1) !== "/") $this->imageCachingPathServer = $path . "/";
-            else $this->imageCachingPathServer = $path;
-            return $this->imageCachingPathServer;
-        }
-    }
-
-    /**
      * Path to the image cache which is accessible by the public
      * @param string|null $path Public path to the image cache.
      * @return string Public path of the image cache. If $path is specified it will set it before
@@ -315,6 +283,26 @@ class RenderOptions
             if (substr($path, -1) !== "/") $this->imageCachingPathPublic = $path . "/";
             else $this->imageCachingPathPublic = $path;
             return $this->imageCachingPathPublic;
+        }
+    }
+    
+        /**
+     * Handler which handles the image Caching
+     * @param \devmx\TSWebViewer\Caching\CachingInterface $handler Caching handler
+     * @return \devmx\TSWebViewer\Caching\CachingInterface If $handler is specified it will set it before
+     * @since 1.1
+     * @author Maximilian Narr
+     */
+    public function ImageCachingHandler($handler = null)
+    {
+        if (is_null($handler))
+        {
+            return $this->imageCachingHandler;
+        }
+        else
+        {
+            $this->imageCachingHandler = $handler;
+            return $this->imageCachingHandler;
         }
     }
 

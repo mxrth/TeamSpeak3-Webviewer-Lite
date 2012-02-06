@@ -68,12 +68,15 @@ $viewerOptions->imgPath($rootDirPublic . "img");
 // If caching should be enabled
 if ((string) $config->caching == "true")
 {
+    // Create HTMLCacheHandler
+    $cacheHandler = new devmx\TSWebViewer\Caching\FileCache($rootDirServer . "cache");
+
+
     $viewerOptions->imageCaching(true);
     $viewerOptions->imageCachingPathPublic($rootDirPublic . "cache");
-    $viewerOptions->imageCachingPathServer($rootDirServer . "cache");
-    $viewerOptions->HTMLCachingPath($rootDirServer . "cache");
-    $viewerOptions->HTMLCachingTime(180);
+    $viewerOptions->ImageCachingHandler($cacheHandler);
     $viewerOptions->HTMLCaching(true);
+    $viewerOptions->HTMLCachingHandler($cacheHandler);
 }
 
 
@@ -98,6 +101,8 @@ else
 {
     $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort);
 }
+
+header("Content-Type: text/html; charset=utf-8");
 
 // Render viewer
 try
