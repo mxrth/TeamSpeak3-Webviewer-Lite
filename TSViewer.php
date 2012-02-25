@@ -88,22 +88,38 @@ $serverPort = (int) $config->serverport;
 $username = (string) $config->username;
 $password = (string) $config->password;
 
+$showIcons = ((string) $config->showIcons) == "true";
+
 // Check for empty config variables
 if (empty($host) || empty($queryPort) || empty($serverPort)) exit("Not all config variables are filled out. Please check your config.");
 
-// If login is needed
-if (!empty($username) && !empty($password))
-{
-    $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort, $username, $password);
+if($showIcons) {
+    // If login is needed
+    if (!empty($username) && !empty($password))
+    {
+        $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort, $username, $password);
+    }
+    // If no login is needed
+    else
+    {
+        $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort);
+    }
 }
-// If no login is needed
-else
-{
-    $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort);
+else {
+    // If login is needed
+    if (!empty($username) && !empty($password))
+    {
+        $viewer = new devmx\TSWebViewer\IconlessViewer($host, $queryPort, $serverPort, $username, $password);
+    }
+    // If no login is needed
+    else
+    {
+        $viewer = new devmx\TSWebViewer\IconlessViewer($host, $queryPort, $serverPort);
+    }
 }
+
 
 header("Content-Type: text/html; charset=utf-8");
-
 // Render viewer
 try
 {

@@ -283,7 +283,7 @@ class TSWebViewer
      * @since 1.0
      * @author Maximilian Narr
      */
-    private function renderServerIcon($serverItem)
+    protected function renderServerIcon($serverItem)
     {
         if ($serverItem['virtualserver_icon_id'] != 0) return $this->renderIcon($serverItem['virtualserver_icon_id']);
     }
@@ -371,7 +371,7 @@ class TSWebViewer
      * @since 1.0
      * @author Maximilian Narr
      */
-    private function getChannelImages($channelItem)
+    protected function getChannelImages($channelItem)
     {
         $style = '<span class="ts-image image-right %s">&nbsp;</span>';
         $data = "";
@@ -437,7 +437,7 @@ class TSWebViewer
      * @since 1.0
      * @author Maximilian Narr
      */
-    private function getClientImages($clientItem)
+    protected function getClientImages($clientItem)
     {
         $style = '<span class="ts-image image-right %s">&nbsp;</span>';
         $data = "";

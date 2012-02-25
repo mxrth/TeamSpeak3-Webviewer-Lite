@@ -4,7 +4,7 @@
     
     <!-- Hostname or ip adress of your teamspeak3 server -->
     <!-- e.g. example.com or 192.168.178.2 -->
-    <host></host>
+    <host>devmx.de</host>
     
     <!-- Queryport of your teamspeak3 server -->
     <!-- default: 10011 -->
@@ -34,4 +34,6 @@
     <!-- If the viewer should download custom icons (recommended) -->
     <!-- default: true -->
     <downloadIcons>true</downloadIcons>
+    
+    <showIcons>false</showIcons>
 </config>
