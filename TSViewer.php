@@ -64,6 +64,15 @@ $viewerOptions = new devmx\TSWebViewer\RenderOptions();
 $viewerOptions->stylesheetURL($rootDirPublic . "css/style.css");
 $viewerOptions->connectLink(true);
 $viewerOptions->imgPath($rootDirPublic . "img");
+$viewerOptions->countryIconsUrl($rootDirPublic . "img/countries");
+$viewerOptions->countryIconsPath($rootDirServer . "img/countries");
+$viewerOptions->countryIconsFileType("png");
+
+if ((string) $config->showImages == "true") $viewerOptions->showImages(true);
+else $viewerOptions->showImages(false);
+
+if ((string) $config->showCountryIcons == "true") $viewerOptions->showCountryIcons(true);
+else $viewerOptions->showCountryIcons(false);
 
 // If caching should be enabled
 if ((string) $config->caching == "true")

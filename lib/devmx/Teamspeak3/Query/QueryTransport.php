@@ -209,7 +209,7 @@ class QueryTransport implements \devmx\Teamspeak3\Query\Transport\TransportInter
     }
     
     public function disconnect() {
-        $this->transmission->send("quit\n");
+        $this->query('quit')->toException();
         $this->transmission->close();
         $this->isConnected = FALSE;
     }

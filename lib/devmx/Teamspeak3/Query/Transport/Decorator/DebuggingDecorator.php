@@ -18,6 +18,7 @@
  */
 namespace devmx\Teamspeak3\Query\Transport\Decorator;
 use devmx\Teamspeak3\Query\Transport\AbstractQueryDecorator;
+use devmx\Teamspeak3\Query\Command;
 
 /**
  *
@@ -96,7 +97,7 @@ class DebuggingDecorator extends AbstractQueryDecorator
         return $response;
     }
     
-    public function query($name, $args=array(), $options=array()) {
+    public function query($name, array $args=array(), array $options=array()) {
         $response = $this->decorated->query($name , $args , $options);
         $this->sentCommands[] = new Command($name, $args, $options);
         $this->receivedResponses[] = $response;
@@ -112,6 +113,7 @@ class DebuggingDecorator extends AbstractQueryDecorator
     
     public function __clone() {
         $this->decorated = clone $this->decorated;
+        self::$cloned++;
     }
     
 }

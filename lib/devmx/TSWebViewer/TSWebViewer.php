@@ -148,7 +148,7 @@ class TSWebViewer
         $this->channellist = $this->query->query("channellist", array(), array("limits", "flags", "voice", "icon"));
         if ($this->channellist->errorOccured()) throw new \RuntimeException("Error receiving channellist. " . $this->channellist->getErrorMessage());
 
-        $this->clientlist = $this->query->query("clientlist", array(), array("away", "voice", "info", "icon", "groups"));
+        $this->clientlist = $this->query->query("clientlist", array(), array("away", "voice", "info", "icon", "groups", "country"));
         if ($this->clientlist->errorOccured()) throw new \RuntimeException("Error receiving clientlist. " . $this->clientlist->getErrorMessage());
 
         $this->serverGroupList = $this->query->query("servergrouplist");
@@ -185,14 +185,6 @@ class TSWebViewer
             $this->establishConnection();
             $this->getServerData();
 
-
-
-            ///echo('<pre>');
-            //var_dump($this->channellist);
-            //var_dump($this->clientlist);
-            //var_dump($this->channelGroupList);
-            //var_dump($this->serverGroupList);
-            //echo('</pre>');
             // Sort clientlist
             $this->sortClientList();
         }
@@ -279,13 +271,14 @@ class TSWebViewer
     /**
      * Renders the servers icon and returns formatted HTML code
      * @param type $serverItem
-     * @return string|null If server has a icon it returns the HTML code to include the icon, else it returns null
+     * @return string|null If server has a icon it returns the HTML code to include the icon, else it returns null. If $showImages is false it returns an empty string.
      * @since 1.0
      * @author Maximilian Narr
      */
     private function renderServerIcon($serverItem)
     {
-        if ($serverItem['virtualserver_icon_id'] != 0) return $this->renderIcon($serverItem['virtualserver_icon_id']);
+        if (!$this->renderOptions->showImages()) return '';
+        else if ($serverItem['virtualserver_icon_id'] != 0) return $this->renderIcon($serverItem['virtualserver_icon_id']);
     }
 
     /**
@@ -367,7 +360,7 @@ class TSWebViewer
      * Checks the channel $channelItem for icons:
      * Home icon, music icon, moderated icon and channel icon
      * @param type $channelItem Channel item to check for icons
-     * @return string Formatted html with the containg icons
+     * @return string Formatted html with the containg icons. If $showImages is false it returns an empty string
      * @since 1.0
      * @author Maximilian Narr
      */
@@ -375,6 +368,12 @@ class TSWebViewer
     {
         $style = '<span class="ts-image image-right %s">&nbsp;</span>';
         $data = "";
+
+        // Check if displaying if images is disabled
+        if (!$this->renderOptions->showImages())
+        {
+            return '';
+        }
 
         // Check if channel has a password
         if ($channelItem['channel_flag_password'] == 1)
@@ -432,7 +431,7 @@ class TSWebViewer
     /**
      * Gets all client images: servergroupimages, channelgroupimage and clientimage
      * @param type $clientItem
-     * @return mixed html code for the images
+     * @return mixed html code for the images. If $showImages is false it returns an empty string
      * @throws \RuntimeException Throws Runtime-Exceptions on failure
      * @since 1.0
      * @author Maximilian Narr
@@ -446,6 +445,12 @@ class TSWebViewer
         $serverGroupIds = explode(",", $clientItem['client_servergroups']);
 
         $channelGroupIcon = $this->getChannelGroupIconId($channelGroupId);
+
+        // Check if displaying of images is disabled
+        if (!$this->renderOptions->showImages())
+        {
+            return '';
+        }
 
         // Check if client is priority speaker
         if ($clientItem['client_is_priority_speaker'] == 1)
@@ -473,6 +478,17 @@ class TSWebViewer
             $clientIconId = $clientItem['client_icon_id'];
 
             $data = $this->renderIcon($clientIconId) . $data;
+        }
+
+        // If country icons should be used
+        if ($this->renderOptions->showCountryIcons())
+        {
+            if ($clientItem['client_country'] !== "")
+            {
+                $country = $clientItem['client_country'];
+
+                $data = $this->renderCountryIcon($country) . $data;
+            }
         }
 
         return $data;
@@ -513,6 +529,36 @@ class TSWebViewer
                 if ($serverGroup['iconid'] == 0) return false;
                 else return $serverGroup['iconid'];
             }
+        }
+    }
+
+    /**
+     * Renders a country icon
+     * @param string $country two letter country code
+     * @return string formatted html to include the country icons. Returns nothing if icons does not exist
+     * @since 1.1
+     * @author Maximilian Narr
+     */
+    protected function renderCountryIcon($country)
+    {
+        $country = strtolower($country);
+
+        $serverPath = $this->renderOptions->countryIconsPath();
+        $publicPath = $this->renderOptions->countryIconsUrl();
+        $fileType = $this->renderOptions->countryIconsFileType();
+
+        if (is_null($serverPath)) throw new \RuntimeException('$countryIconsPath is not specified. Plase set it.');
+        if (is_null($publicPath)) throw new \RuntimeException('$countryIconsUrl is not specified. Please set it.');
+        if (is_null($fileType)) throw new \RuntimeException('$fileType is not specified. Please set it.');
+
+        $style = 'background: url(%s) center center no-repeat;';
+        $imageHtml = '<span style="%s" class="ts-image image-right">&nbsp;</span>';
+
+        // Check if icons exists
+        if (file_exists($serverPath . $country . "." . $fileType))
+        {
+            $styleTag = sprintf($style, $publicPath . $country . "." . $fileType);
+            return sprintf($imageHtml, $styleTag);
         }
     }
 

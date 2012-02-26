@@ -89,7 +89,7 @@ class Server implements \devmx\Teamspeak3\Node\ServerInterface, \ArrayAccess
     
     public function getVirtualServerByID($id){
         foreach($this->virtualServers as $server) {
-            if($server->getID() == $port) {
+            if($server->getID() == $id) {
                 return $server;
             }
         }

@@ -34,4 +34,12 @@
     <!-- If the viewer should download custom icons (recommended) -->
     <!-- default: true -->
     <downloadIcons>true</downloadIcons>
+    
+    <!-- If images should be shown (recommended) -->
+    <!-- default: true -->
+    <showImages>true</showImages>
+    
+    <!-- If country icons should be shown (not recommended) -->
+    <!-- default: false -->
+    <showCountryIcons>false</showCountryIcons>
 </config>

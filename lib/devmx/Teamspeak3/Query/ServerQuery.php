@@ -30,23 +30,22 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
      */
     protected $transport;
     
-    protected $isLoggedIn = FALSE;
+    protected $isLoggedIn = false;
     protected $loginName = '';
     protected $loginPass = '';
-    protected $isOnVirtualServer = FALSE;
+    protected $isOnVirtualServer = false;
     protected $virtualServerIdentifyer = Array();
     protected $registerCommands = Array();
-    protected $notInDefaultChannel = FALSE;
-    protected $channelID = NULL;
-    protected $virtualServerStatus = NULL;
-    protected $virtualServerPort = NULL;
-    protected $virtualServerID = NULL;
-    protected $uniqueID = NULL;
-    protected $nickname = NULL;
-    protected $databaseID = NULL;
-    protected $uniqueVirtualServerID = NULL;
-    protected $clientID = NULL;
-    
+    protected $channelID = 0;
+    protected $virtualServerStatus = 'unknown';
+    protected $virtualServerPort = 0;
+    protected $virtualServerID = 0;
+    protected $uniqueID = '';
+    protected $nickname = '';
+    protected $databaseID = 0;
+    protected $uniqueVirtualServerID = '';
+    protected $clientID = 0;
+
     public function __construct(Transport\TransportInterface $transport) {
         $this->transport = $transport;
     }
@@ -63,24 +62,25 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
     }
     
     public function refreshWhoAmI() {
-        $response = $this->query("whoami");
+        $response = $this->transport->query("whoami");
         if(!$response->errorOccured()) {
-            $this->isLoggedIn = $response['client_database_id'] === 0;
-            $this->loginName = $response['login_name'];
+            $this->loginName = $response['client_login_name'];
+            $this->isLoggedIn = $this->loginName != '';
             if(!$this->isLoggedIn)
                 $this->loginPass = '';
-            $this->isOnVirtualServer = $response['virtualserver_port'] === 0;
+            $this->isOnVirtualServer =($response['virtualserver_port'] !== 0);
             if($this->isOnVirtualServer) {
                 $this->virtualServerIdentifyer = Array('id'=>$response['virtualserver_id']);
-                $this->virtualServerID = $response['virtualserver_id'];
-                $this->virtualServerPort = $response['virtualserver_port'];
-                $this->uniqueVirtualServerID = $response['virtualserver_unique_identifyer'];
             }
-           $this->uniqueID = $response['client_unique_identifyer']; 
-           $this->channelID = $response['client_channel_id'];
-           $this->virtualServerStatus = $response['virtualserver_status'];
-           $this->databaseID = $response['client_database_id'];
-           $this->clientID = $response['client_id'];
+            $this->virtualServerID = $response['virtualserver_id'];
+            $this->virtualServerPort = $response['virtualserver_port'];
+            $this->uniqueVirtualServerID = $response['virtualserver_unique_identifyer'];
+            $this->uniqueID = $response['client_unique_identifyer']; 
+            $this->channelID = $response['client_channel_id'];
+            $this->virtualServerStatus = $response['virtualserver_status'];
+            $this->databaseID = $response['client_database_id'];
+            $this->clientID = $response['client_id'];
+            $this->nickname = $response['client_nickname'];
         }
         else {
             $response->toException();
@@ -113,6 +113,7 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
         $response->toException();
         $this->isOnVirtualServer = TRUE;
         $this->virtualServerIdentifyer = Array('port'=>$port);
+        $this->virtualServerPort = $port;
         return $this;
     }
     
@@ -121,15 +122,25 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
             throw new \InvalidArgumentException("Invalid server ID, if you want to deselect the current server, please use deselect() instead");
         }
         $options = $virtual ? Array('virtual') : Array();
-        $response = $this->transport->query("use", Array('id'=>$id), $options);
+        $response = $this->transport->query("use", Array('sid'=>$id), $options);
         $response->toException();
         $this->isOnVirtualServer = TRUE;
         $this->virtualServerIdentifyer = Array('id'=>$id);
+        $this->virtualServerID = $id;
         return $this;
     }
     
+    protected function useVirtualServer($args, $virtual) {
+       if(isset($args['id'])) {
+            return $this->useByID($args['id'], $virtual); 
+       }
+       elseif(isset($args['port'])) {
+            return $this->useByPort($args['port'], $virtual);
+       }
+    }
+    
     public function deselect() {
-        $response = $this->transport->query('use', Array('id' => 0));
+        $response = $this->transport->query('use');
         $response->toException();
         $this->isOnVirtualServer = FALSE;
         $this->virtualServerIdentifyer = Array();
@@ -142,7 +153,6 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
         }
         $response = $this->transport->query('clientmove', Array('clid'=>$this->getClientID(), 'cid'=>$cid));
         $response->toException();
-        $this->notInDefaultChannel = TRUE;
         $this->channelID = $cid;
     }
     
@@ -151,10 +161,10 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
         if($cid !== NULL) {
             $args['cid'] = $cid;
         }
-        $command = new Command('servernotifyregister', Array('event'=>$name));
+        $command = new Command('servernotifyregister', $args);
         $response = $this->transport->sendCommand($command);
-        if(!$response->errorOccured()) {
-            throw new \RuntimeException("Cannot register for event $event");
+        if($response->errorOccured()) {
+            throw new \RuntimeException("Cannot register for event $name");
         }
         else{
             $this->registerCommands[] = $command;
@@ -186,27 +196,45 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
     public function __sleep()
     {
         $this->transport->disconnect();
+        return array(
+            'transport', 
+            'isLoggedIn', 
+            'loginName', 
+            'loginPass', 
+            'isOnVirtualServer', 
+            'virtualServerIdentifyer', 
+            'registerCommands', 
+            'channelID', 
+            'virtualServerStatus',
+            'virtualServerID',
+            'uniqueID',
+            'nickname',
+            'databaseID',
+            'uniqueVirtualServerID',
+            'clientID',
+        );
     }
-
+        
     public function __wakeup()
     {
-            $this->transport->connect();
             $this->recoverState();
     }
     
     protected  function recoverState() {
-        if($this->isLoggedIn) {
-            $this->login($this->loginName, $this->loginPass);
-        }
-        if($this->isOnVirtualServer) {
-            $this->use($this->virtualServerIdentifyer);
-        }
-        if($this->notInDefaultChannel) {
-            $this->moveToChannel($this->channelID);
-        }
-        foreach($this->registerCommands as $command) {
-            $this->sendCommand($command);
-        }
+        if($this->isConnected()) {
+            if($this->isLoggedIn) {
+                $this->login($this->loginName, $this->loginPass);
+            }
+            if($this->isOnVirtualServer) {
+                $this->useVirtualServer($this->virtualServerIdentifyer, true);
+            }
+            if($this->getChannelID() !== 0) {
+                $this->moveToChannel($this->channelID);
+            }
+            foreach($this->registerCommands as $command) {
+                $this->transport->sendCommand($command);
+            }
+        }        
     }
     
     public function isLoggedIn()
@@ -248,17 +276,9 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
     {
         return $this->registerCommands;
     }
-
-    public function notInDefaultChannel()
-    {
-        return $this->notInDefaultChannel;
-    }
-
+    
     public function getChannelID()
     {
-        if($this->channelID == NULL) {
-            
-        }
         return $this->channelID;
     }
 
@@ -289,7 +309,14 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
     public function getUniqueVirtualServerID()
     {
         return $this->uniqueVirtualServerID;
-
+    }
+    
+    public function getClientID() {
+        return $this->clientID;
+    }
+    
+    public function hasRegisteredForEvents() {
+        return $this->registerCommands != array();
     }
 
     
@@ -320,38 +347,31 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
     {
         $args = $command->getParameters();
         if($command->getName() == 'use') {
-            if(isset($args['id'])) {
-                if($args['id'] == 0) {
-                    return $this->deselect();
-                }
-                else {
-                   return $this->useByID($args['id']); 
-                }
-            }
-            elseif(isset($args['port'])) {
-                return $this->useByPort($args['port']);
-            }
+            return $this->useVirtualServer($args, in_array('virtual', $command->getOptions()));
         }
-        elseif($command->getName() == 'login') {
+        if($command->getName() == 'login') {
             if(isset($args['client_login_name']) && isset($args['client_login_password'])) {
                 return $this->login($args['client_login_name'], $args['client_login_password']);
             }
         }
-        elseif($command->getName() == 'logout') {
-            $this->logout();
+        if($command->getName() == 'logout') {
+            return $this->logout();
         }
-        elseif($command->getName() == 'servernotifyregister') {
+        if($command->getName() == 'servernotifyregister') {
             if(isset($args['event'])) {
-                if(isset($args['cid'])) {
-                    return $this->registerForEvent($args['event'], $args['cid']);
+                if(isset($args['id'])) {
+                    return $this->registerForEvent($args['event'], $args['id']);
                 }
                 else {
                     return $this->registerForEvent($args['event']);
                 }
             }
         }
-        elseif($command->getName() == 'servernotifyunregister') {
-            
+        if($command->getName() == 'servernotifyunregister') {
+            return $this->unregisterEvents();
+        }
+        if($command->getName() === 'whoami') {
+            return $this->refreshWhoAmI();
         }
         return $this->transport->sendCommand($command);
     }
@@ -363,6 +383,10 @@ class ServerQuery implements \devmx\Teamspeak3\Query\Transport\TransportInterfac
             throw new \LogicException("Cannot check for events when not registered for");
          }
          return $this->transport->waitForEvent();
+    }
+    
+    public function getTransport() {
+        return $this->transport;
     }
 
 }

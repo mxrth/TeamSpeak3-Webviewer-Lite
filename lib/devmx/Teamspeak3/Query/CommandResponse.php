@@ -51,7 +51,7 @@ class CommandResponse extends Response
      * @param int $errorID
      * @param string $errorMessage 
      */
-    public function __construct(Command $c, array $items, $errorID=0, $errorMessage="ok", $errorValues=array()) {
+    public function __construct(Command $c, array $items=array(), $errorID=0, $errorMessage="ok", $errorValues=array()) {
         $this->command = $c;
         $this->items = $items;
         $this->errorID = $errorID;

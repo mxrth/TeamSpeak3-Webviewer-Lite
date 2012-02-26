@@ -34,6 +34,11 @@ class RenderOptions
     protected $connectLinkTarget = false;
     protected $stylesheetURL = null;
     protected $imagePath = null;
+    protected $showImages = true;
+    protected $showCountryIcons = false;
+    protected $countryIconsUrl = null;
+    protected $countryIconsPath = null;
+    protected $countryIconsFileType = null;
     protected $downloadCustomImages = true;
     protected $divClass = "devmx-webviewer";
     protected $HTMLCaching = false;
@@ -170,6 +175,93 @@ class RenderOptions
     }
 
     /**
+     * If any images should be shown in the webviewer
+     * @param bool|null $show If images should be shown. If $show = null it returns the current value of $showImages
+     * @return bool If images should be shown
+     * @since 1.1
+     * @author Maximilian Narr
+     */
+    public function showImages($show = null)
+    {
+        if (is_null($show)) return $this->showImages;
+        else
+        {
+            $this->showImages = $show;
+            return $this->showImages;
+        }
+    }
+
+    /**
+     * If country icons should be displayed
+     * @param bool|null $show If country icons should be shown. If $show = null it returns the current value of $showCountryIcons
+     * @return bool If country icons should be shown
+     * @since 1.1
+     * @author Maximilian Narr
+     */
+    public function showCountryIcons($show = null)
+    {
+        if (is_null($show)) return $this->showCountryIcons;
+        else
+        {
+            $this->showCountryIcons = $show;
+            return $this->showCountryIcons;
+        }
+    }
+
+    /**
+     * Public url to the country icons directory
+     * @param string|null $url Url to the directory of the country icons. If $url = null it returns the current value of $countryIconsUrl;
+     * @return string Url to the country icons directory
+     * @since 1.0
+     * @author Maximilian Narr
+     */
+    public function countryIconsUrl($url = null)
+    {
+        if (is_null($url)) return $this->countryIconsUrl;
+        else
+        {
+            if (substr($url, -1) !== "/") $this->countryIconsUrl = $url . "/";
+            else $this->countryIconsUrl = $url;
+            return $this->countryIconsUrl;
+        }
+    }
+
+    /**
+     * Server side path to the country icons diectory
+     * @param string|null $path Path to the directory of the country icons. If $path = null it returns the current value of $countryIconsPath
+     * @return string Path to the country icons
+     * @since 1.0
+     * @author Maximilian Narr
+     */
+    public function countryIconsPath($path = null)
+    {
+        if (is_null($path)) return $this->countryIconsPath;
+        else
+        {
+            if (substr($path, -1) !== "/") $this->countryIconsPath = $path . "/";
+            else $this->countryIconsPath = $path;
+            return $this->countryIconsPath;
+        }
+    }
+
+    /**
+     * Sets the file type of the country icon
+     * @param string|null $type Filetype of the country icons. If $type = null it returnst the current value of $countryIconsFileType;
+     * @return string File type of the country icons
+     * @since 1.1
+     * @author Maximilian Narr
+     */
+    public function countryIconsFileType($type = null)
+    {
+        if (is_null($type)) return $this->countryIconsFileType;
+        else
+        {
+            $this->countryIconsFileType = str_replace(".", "", $type);
+            return $this->countryIconsFileType;
+        }
+    }
+
+    /**
      * If custom icons should downloaded from the ts server
      * @param boolean|null $download If icons should be downloaded set true, else false. If $download is not set, it will return the current set option
      * @return bool True if icons should be downloaded, else false. Returns currently set options of $download is null
@@ -285,8 +377,8 @@ class RenderOptions
             return $this->imageCachingPathPublic;
         }
     }
-    
-        /**
+
+    /**
      * Handler which handles the image Caching
      * @param \devmx\TSWebViewer\Caching\CachingInterface $handler Caching handler
      * @return \devmx\TSWebViewer\Caching\CachingInterface If $handler is specified it will set it before
