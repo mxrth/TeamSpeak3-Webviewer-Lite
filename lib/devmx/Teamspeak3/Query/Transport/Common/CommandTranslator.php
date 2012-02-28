@@ -130,7 +130,7 @@ class CommandTranslator implements \devmx\Teamspeak3\Query\Transport\CommandTran
         {
             return FALSE;
         }
-        if (preg_match("/^[a-z_-]*$/iD", $name) == 0)
+        if (preg_match("/^[0-9a-z_-]*$/iD", $name) == 0)
         {
             return FALSE;
         }

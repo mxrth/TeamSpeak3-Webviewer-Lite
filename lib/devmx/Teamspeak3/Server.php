@@ -27,10 +27,20 @@ class Server implements \devmx\Teamspeak3\Node\ServerInterface, \ArrayAccess
     
     protected $virtualServers = Array();
     
+    /**
+     * @todo maybe rename to set($name, $value)
+     * @param type $name
+     * @param type $value 
+     */
     public function setValue($name, $value) {
         $this->data[$name] = $value;
     }
     
+    /**
+     * @todo maybe rename to get($name)
+     * @param type $name
+     * @return type 
+     */
     public function getValue($name) {
         return $this->data[$name];
     }
@@ -58,12 +68,21 @@ class Server implements \devmx\Teamspeak3\Node\ServerInterface, \ArrayAccess
     public function getData() {
         return $this->data;
     } 
+    
+    public function setData(array $data) {
+        $this->data = $data;
+    }
 
     
     public function createVirtualServer($data) {
        if($data instanceof Node\VirtualServerInterface && is_int($data->getID())) {
            $this->virtualServers[$data->getID()] = $data;
        }
+       elseif(is_int($data['id'])) {
+           $server = new VirtualServer();
+           $server->setData($data);
+       }
+       return $data;
     }
     
     public function deleteVirtualServer($identifyer) {
@@ -146,7 +165,7 @@ class Server implements \devmx\Teamspeak3\Node\ServerInterface, \ArrayAccess
      * @return \DateTime the current time on the server
      */
     public function getCurrentServerTime() {
-        $time = new\DateTime();
+        $time = new \DateTime();
         $time->setTimestamp($this['host_timestamp_utc']);
     }
     

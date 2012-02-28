@@ -417,7 +417,8 @@ class TSWebViewer
      */
     private function getClientStatusImage($clientItem)
     {
-        if ($clientItem['client_away'] == (int) 1) return "client-away";
+        if ($clientItem['client_type'] == (int) 1) return "client-query";
+        else if ($clientItem['client_away'] == (int) 1) return "client-away";
         else if ($clientItem['client_input_muted'] == (int) 1) return "client-input-muted";
         else if ($clientItem['client_output_muted'] == (int) 1) return "client-output-muted";
         else if ($clientItem['client_input_hardware'] == (int) 0) return "client-input-muted-hardware";

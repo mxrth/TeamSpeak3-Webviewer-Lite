@@ -1,5 +1,9 @@
 <?xml version="1.0"?>
 <config>
+    <!-- ### devMX TeamSpeak3 Webviewer Lite ### -->
+    <!-- See: http://devmx.de/en/software/teamspeak3-webviewer-lite/dokumentation-installation -->
+    <!-- for information abtout the configuration -->
+    
     <!-- ### Basic configuration ### -->
     
     <!-- Hostname or ip adress of your teamspeak3 server -->
@@ -42,4 +46,8 @@
     <!-- If country icons should be shown (not recommended) -->
     <!-- default: false -->
     <showCountryIcons>false</showCountryIcons>
+    
+    <!-- If query clients should be rendered in the viewer (not recommended) -->
+    <!-- default: false -->
+    <renderServerQueryClients>false</renderServerQueryClients>
 </config>

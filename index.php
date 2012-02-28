@@ -16,5 +16,8 @@
  *  You should have received a copy of the GNU General Public License
  *  along with devMX TS3 Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
  */
+// Check PHP version
+if (version_compare(phpversion(), "5.3.2", "<")) exit("PHP 5.3.2 or higher required.");
+
 require_once 'TSViewer.php';
 ?>

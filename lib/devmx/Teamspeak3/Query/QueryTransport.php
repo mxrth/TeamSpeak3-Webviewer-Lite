@@ -32,6 +32,7 @@ class QueryTransport implements \devmx\Teamspeak3\Query\Transport\TransportInter
      * @param string $host the host of the Ts3-Server
      * @param int $port the Queryport of the Ts3-Server
      * @return QueryTransport 
+     * @deprecated
      */
     public static function getCommon($host, $port)  {
         $trans = new \devmx\Transmission\TCP($host, $port);
@@ -209,7 +210,8 @@ class QueryTransport implements \devmx\Teamspeak3\Query\Transport\TransportInter
     }
     
     public function disconnect() {
-        $this->query('quit')->toException();
+        // because disconnect could be also called on invalid servers, we just send the quit message and don't wait for any response
+        $this->transmission->send("quit\n");
         $this->transmission->close();
         $this->isConnected = FALSE;
     }

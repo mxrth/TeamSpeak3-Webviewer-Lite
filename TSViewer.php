@@ -17,8 +17,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with devMX TS3 Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
  */
-// Check PHP version
-if (version_compare(phpversion(), "5.3.2", "<")) exit("PHP 5.3.2 or higher required.");
 
 // Set absolute directory of the server
 $rootDirServer = __DIR__ . "/";
@@ -68,11 +66,17 @@ $viewerOptions->countryIconsUrl($rootDirPublic . "img/countries");
 $viewerOptions->countryIconsPath($rootDirServer . "img/countries");
 $viewerOptions->countryIconsFileType("png");
 
+// If images should be shown
 if ((string) $config->showImages == "true") $viewerOptions->showImages(true);
 else $viewerOptions->showImages(false);
 
+// If country icons should be shown
 if ((string) $config->showCountryIcons == "true") $viewerOptions->showCountryIcons(true);
 else $viewerOptions->showCountryIcons(false);
+
+// If query clients should be shown
+if((string) $config->renderServerQueryClients == "true") $viewerOptions->renderServerQueryClients (true);
+else $viewerOptions->renderServerQueryClients (false);
 
 // If caching should be enabled
 if ((string) $config->caching == "true")
