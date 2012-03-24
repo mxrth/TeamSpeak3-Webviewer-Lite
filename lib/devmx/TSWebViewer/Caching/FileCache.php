@@ -68,9 +68,9 @@ class FileCache implements CachingInterface
         $cachePath = $this->cachePath . "/" . $key;
         $timePath = $this->cachePath . "/" . $key . ".time";
 
-        if (file_exists($cachePath)) unset($cachePath);
+        if (file_exists($cachePath)) unlink($cachePath);
 
-        if (file_exists($timePath)) unset($timePath);
+        if (file_exists($timePath)) unlink($timePath);
     }
 
     public function flushCache()
@@ -79,7 +79,7 @@ class FileCache implements CachingInterface
 
         while ($file = readdir($handler))
         {
-            if (preg_match("/(.*)(\.cache)/", $file)) unset($file);
+            if (preg_match("/(.*)(\.cache)/", $file)) unlink($file);
         }
     }
 
