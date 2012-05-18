@@ -1,0 +1,19 @@
+{
+    "name": "devmx/Teamspeak3-Webviewer-Lite",
+    "type": "app",
+    "description": "Simple Teamspeak3 Webviewer",
+    "license": "GPLv3",
+    "require": {
+        "php": ">=5.3.2",
+        "devmx/TeamSpeak3-Library-dev": "master-dev"
+    },
+    "autoload": {
+        "psr-0": {"devmx": "src"}
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url": "https://github.com/devMX/TeamSpeak3-Library-dev"
+        }
+    ]
+}

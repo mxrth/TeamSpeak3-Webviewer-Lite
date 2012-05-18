@@ -5,5 +5,4 @@
 /vendor/.composer/
 /lib/.composer/
 /src/devmx/.composer/
-/composer.lock
 /vendor/
