@@ -18,6 +18,8 @@
  *  along with devMX TS3 Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
  */
 
+require_once "vendor/autoload.php";
+
 // Set absolute directory of the server
 $rootDirServer = __DIR__ . "/";
 $rootDirPublic = "";
@@ -44,14 +46,6 @@ else
 // Replace file names
 $rootDirPublic = str_replace("TSViewer.php", "", $rootDirPublic);
 $rootDirPublic = str_replace("index.php", "", $rootDirPublic);
-
-spl_autoload_register(function($class)
-        {
-            global $rootDirServer;
-            $path = str_replace("\\", "/", $class);
-            $path = $rootDirServer . "lib/" . $path . ".php";
-            if (\file_exists($path)) require_once $path;
-        });
 
 
 // Load configuration file
