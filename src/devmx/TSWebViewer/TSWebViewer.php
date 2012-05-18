@@ -77,55 +77,9 @@ class TSWebViewer
     private $renderTimeStart;
     private $renderTimeEnd;
 
-    function __construct($host, $queryPort = 10011, $serverPort = 9987, $username = null, $password = null)
+    function __construct(  TransportInterface $query)
     {
-        $this->host = $host;
-        $this->queryPort = $queryPort;
-        $this->serverPort = $serverPort;
-        $this->username = $username;
-        $this->password = $password;
-    }
-
-    /**
-     * Tries to connect to the server query, logging in and selecting virtual server
-     * @throws \RuntimeException If an error occures.
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    private function establishConnection()
-    {
-        $tcp = new TCP($this->host, $this->queryPort);
-        $this->query = new QueryTransport($tcp, new CommandTranslator(), new ResponseHandler());
-                
-        try
-        {
-            $this->query->connect();
-        }
-        catch (Exception $ex)
-        {
-            throw new \RuntimeException($ex->getMessage());
-        }
-
-        if (!empty($this->username) && !empty($this->password))
-        {
-            $result = $this->query->query("login", array("client_login_name" => $this->username, "client_login_password" => $this->password));
-
-            // Check for error
-            if ($result->errorOccured())
-            {
-                $errorMsg = "Failed to login to server. Error-Message: %s";
-                throw new \RuntimeException(sprintf($errorMsg, $result->getErrorMessage()));
-            }
-        }
-
-        $result = $this->query->query("use", array("port" => $this->serverPort));
-
-        // Check for error
-        if ($result->errorOccured())
-        {
-            $errorMsg = "Failed to select server. Error-message: %s";
-            throw new \RuntimeException(sprintf($errorMsg, $result->getErrorMessage()));
-        }
+        $this->query = $query;
     }
 
     /**
