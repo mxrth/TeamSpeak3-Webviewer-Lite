@@ -47,74 +47,20 @@ else
 $rootDirPublic = str_replace("TSViewer.php", "", $rootDirPublic);
 $rootDirPublic = str_replace("index.php", "", $rootDirPublic);
 
+$c = new devmx\TSWebViewer\RenderOptions();
+$c['root.public'] = $rootDirPublic;
+$c['root.server'] = $rootDirServer;
 
-// Load configuration file
-$config = simplexml_load_file($rootDirServer . "config.xml");
+//configure the container
+include('config.php');
 
-// Apply render options options
-$viewerOptions = new devmx\TSWebViewer\RenderOptions();
-$viewerOptions->stylesheetURL($rootDirPublic . "css/style.css");
-$viewerOptions->connectLink(true);
-$viewerOptions->imgPath($rootDirPublic . "img");
-$viewerOptions->countryIconsUrl($rootDirPublic . "img/countries");
-$viewerOptions->countryIconsPath($rootDirServer . "img/countries");
-$viewerOptions->countryIconsFileType("png");
-
-// If images should be shown
-if ((string) $config->showImages == "true") $viewerOptions->showImages(true);
-else $viewerOptions->showImages(false);
-
-// If country icons should be shown
-if ((string) $config->showCountryIcons == "true") $viewerOptions->showCountryIcons(true);
-else $viewerOptions->showCountryIcons(false);
-
-// If query clients should be shown
-if((string) $config->renderServerQueryClients == "true") $viewerOptions->renderServerQueryClients (true);
-else $viewerOptions->renderServerQueryClients (false);
-
-// If caching should be enabled
-if ((string) $config->caching == "true")
-{
-    // Create HTMLCacheHandler
-    $cacheHandler = new devmx\TSWebViewer\Caching\FileCache($rootDirServer . "cache");
-
-
-    $viewerOptions->imageCaching(true);
-    $viewerOptions->imageCachingPathPublic($rootDirPublic . "cache");
-    $viewerOptions->ImageCachingHandler($cacheHandler);
-    $viewerOptions->HTMLCaching(true);
-    $viewerOptions->HTMLCachingHandler($cacheHandler);
-}
-
-
-
-$host = (string) $config->host;
-$queryPort = (int) $config->queryport;
-$serverPort = (int) $config->serverport;
-
-$username = (string) $config->username;
-$password = (string) $config->password;
-
-// Check for empty config variables
-if (empty($host) || empty($queryPort) || empty($serverPort)) exit("Not all config variables are filled out. Please check your config.");
-
-// If login is needed
-if (!empty($username) && !empty($password))
-{
-    $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort, $username, $password);
-}
-// If no login is needed
-else
-{
-    $viewer = new devmx\TSWebViewer\TSWebViewer($host, $queryPort, $serverPort);
-}
 
 header("Content-Type: text/html; charset=utf-8");
 
 // Render viewer
 try
 {
-    echo($viewer->renderServer($viewerOptions));
+    echo($c['renderer']->renderServer());
 }
 catch (Exception $ex)
 {

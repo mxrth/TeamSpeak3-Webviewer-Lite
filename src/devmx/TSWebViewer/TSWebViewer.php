@@ -29,12 +29,8 @@ use devmx\Teamspeak3\Query\Transport\Common\CommandTranslator;
 class TSWebViewer
 {
 
-    private $host;
-    private $queryPort;
-    private $serverPort;
-    private $username;
-    private $password;
-
+    private $options;
+    
     /**
      * @var devmx\TeamSpeak3\Query\Transport\QueryTransport;
      */
@@ -77,9 +73,10 @@ class TSWebViewer
     private $renderTimeStart;
     private $renderTimeEnd;
 
-    function __construct(  TransportInterface $query)
+    function __construct(  TransportInterface $query, $options)
     {
         $this->query = $query;
+        $this->options = $options;
     }
 
     /**
@@ -118,29 +115,26 @@ class TSWebViewer
 
     /**
      * Renders the server
-     * @param RenderOptions $renderOptions Rendering options for the webviewer
      * @return string HTML-Code for the Webviewer
      * @throws RuntimeException If error occures
      * @since 1.0
      * @author Maximilian Narr
      */
-    public function renderServer(RenderOptions $renderOptions)
+    public function renderServer()
     {
         $this->renderTime = microtime(true);
-        $this->renderOptions = $renderOptions;
 
         // If caching should be used
-        if ($this->renderOptions->HTMLCaching())
+        if ($this->options['cache.html.enable'])
         {
-            $HTMLCachingHandler = $this->renderOptions->HTMLCachingHandler();
-            $key = md5($this->host . $this->queryPort . $this->serverPort);
+            $HTMLCachingHandler = $this->options['cache.html'];
+            $key = md5($this->options['ts3']['host'] . $this->options['ts3']['query.port'] . $this->options['ts3']['vserver.port']);
 
             if ($HTMLCachingHandler->isCached($key)) return $HTMLCachingHandler->getCache($key);
         }
 
         try
         {
-            $this->establishConnection();
             $this->getServerData();
 
             // Sort clientlist
@@ -158,32 +152,32 @@ class TSWebViewer
         $html = "";
 
         // If head-tags should be used
-        if ($this->renderOptions->headTags())
+        if ($this->options['html.generate_head_tags'])
         {
-            $div = sprintf($div, $this->renderOptions->divClass(), $this->renderServerName() . $this->getChannels(0));
-            $html .= sprintf($head, $this->renderOptions->stylesheetURL(), $div);
+            $div = sprintf($div, $this->options['html.div_class'], $this->renderServerName() . $this->getChannels(0));
+            $html .= sprintf($head, $this->options['stylesheet.url'], $div);
         }
         // If no head-tags should be used
         else
         {
             // If stylesheetlink should be included
-            $stylesheet = $this->renderOptions->stylesheetURL();
+            $stylesheet = $this->options['stylesheet.url'];
             if (!empty($stylesheet))
             {
-                $link = sprintf($link, $this->renderOptions->stylesheetURL());
-                $html .= sprintf($div, $this->renderOptions->divClass(), $link . $this->renderServerName() . $this->getChannels(0));
+                $link = sprintf($link, $this->options['stylesheet.url']);
+                $html .= sprintf($div, $this->options['html.div_class'], $link . $this->renderServerName() . $this->getChannels(0));
             }
             // If no stylesheet should be included
             else
             {
-                $html .= sprintf($div, $this->renderOptions->divClass(), $this->renderServerName() . $this->getChannels(0));
+                $html .= sprintf($div, $this->options['html.div_class'], $this->renderServerName() . $this->getChannels(0));
             }
         }
 
         // If file needs to be cached
-        if ($this->renderOptions->HTMLCaching())
+        if ($this->options['cache.html.enable'])
         {
-            $HTMLCachingHandler->cache(md5($this->host . $this->queryPort . $this->serverPort), $html);
+            $HTMLCachingHandler->cache(md5($this->options['ts3']['host'] . $this->options['ts3']['query.port']. $this->options['ts3']['vserver.port']), $html);
         }
 
         $this->renderTimeEnd = microtime(true);
@@ -202,19 +196,19 @@ class TSWebViewer
     {
         $serverItem = $this->serverinfo->getItem(0);
 
-        if ($this->renderOptions->connectLink())
+        if ($this->options['connectlink.show'])
         {
             $html = '%s<span class="ts-image server-image">&nbsp;</span><a href="%s"><span class="servername">%s</span></a>';
             $tsLink = 'ts3server://%s?port=%s';
-            $targetLink = $this->renderOptions->connectLinkTarget();
+            $targetLink = $this->options['connectlink.target'];
 
             if (!$targetLink)
             {
-                $tsLink = sprintf($tsLink, $this->host, $this->serverPort);
+                $tsLink = sprintf($tsLink, $this->options['ts3']['host'], $this->options['ts3']['vserver.port']);
             }
             else
             {
-                $tsLink = sprintf($tsLink, $this->renderOptions->connectLinkTarget(), $this->serverPort);
+                $tsLink = sprintf($tsLink, $targetLink, $this->options['ts3']['vserver.port']);
             }
 
             return sprintf($html, $this->renderServerIcon($serverItem), $tsLink, $this->Utf8ToHtml($serverItem['virtualserver_name']));
@@ -235,7 +229,7 @@ class TSWebViewer
      */
     private function renderServerIcon($serverItem)
     {
-        if (!$this->renderOptions->showImages()) return '';
+        if (!$this->options['images.show']) return '';
         else if ($serverItem['virtualserver_icon_id'] != 0) return $this->renderIcon($serverItem['virtualserver_icon_id']);
     }
 
@@ -289,7 +283,7 @@ class TSWebViewer
             if ($client['cid'] == $cid)
             {
                 // Skip client if ServerQueryClient
-                if (!$this->renderOptions->renderServerQueryClients() && $client['client_type'] == (int) 1) continue;
+                if (!$this->options['render_serverquery_clients'] && $client['client_type'] == (int) 1) continue;
 
                 $html .= '<div class="client">';
                 $html .= sprintf('%s<span class="ts-image %s">&nbsp;</span><span class="label">%s</span>', $this->getClientImages($client), $this->getClientStatusImage($client), $this->Utf8ToHtml($client['client_nickname']));
@@ -328,7 +322,7 @@ class TSWebViewer
         $data = "";
 
         // Check if displaying if images is disabled
-        if (!$this->renderOptions->showImages())
+        if (!$this->options['images.show'])
         {
             return '';
         }
@@ -406,7 +400,7 @@ class TSWebViewer
         $channelGroupIcon = $this->getChannelGroupIconId($channelGroupId);
 
         // Check if displaying of images is disabled
-        if (!$this->renderOptions->showImages())
+        if (!$this->options['images.show'])
         {
             return '';
         }
@@ -440,7 +434,7 @@ class TSWebViewer
         }
 
         // If country icons should be used
-        if ($this->renderOptions->showCountryIcons())
+        if ($this->options['country_icons.show'])
         {
             if ($clientItem['client_country'] !== "")
             {
@@ -502,9 +496,9 @@ class TSWebViewer
     {
         $country = strtolower($country);
 
-        $serverPath = $this->renderOptions->countryIconsPath();
-        $publicPath = $this->renderOptions->countryIconsUrl();
-        $fileType = $this->renderOptions->countryIconsFileType();
+        $serverPath = $this->options['country_icons.path'];
+        $publicPath = $this->options['country_icons.url'];
+        $fileType = $this->options['country_icons.filetype'];
 
         if (is_null($serverPath)) throw new \RuntimeException('$countryIconsPath is not specified. Plase set it.');
         if (is_null($publicPath)) throw new \RuntimeException('$countryIconsUrl is not specified. Please set it.');
@@ -544,16 +538,16 @@ class TSWebViewer
         if (in_array($iconId, $standardImages))
         {
             // Check if $imgPath is available
-            if ($this->renderOptions->imgPath() == null) throw new \RuntimeException('$imgPath is not specified in the renderOptions. Please set it.');
+            if ($this->options['images.path'] == null) throw new \RuntimeException('$imgPath is not specified in the renderOptions. Please set it.');
 
-            $styleTag = sprintf($style, $this->renderOptions->imgPath() . $iconId . ".png");
+            $styleTag = sprintf($style, $this->options['images.path'] . $iconId . ".png");
             return sprintf($imageHtml, $styleTag);
         }
         // No standard image --> download it
         else
         {
             // If icon download is disabled
-            $downloadImages = $this->renderOptions->downloadCustomImages();
+            $downloadImages = $this->options['download_custom_icons'];
             if ($downloadImages == false) return "";
 
 
@@ -575,8 +569,8 @@ class TSWebViewer
      */
     private function manageImageCaching($iconId)
     {
-        $useImageCaching = $this->renderOptions->imageCaching();
-        $imagePathPublic = $this->renderOptions->imageCachingPathPublic();
+        $useImageCaching = $this->options['cache.images.enable'];
+        $imagePathPublic = $this->options['cache.file.path']; //TODO: let this not depend on file cache
 
         $cssDataBase64 = "data:image/png;base64,%s";
 
@@ -588,7 +582,7 @@ class TSWebViewer
         // If image caching should be used
         else
         {
-            $imageCachingHandler = $this->renderOptions->ImageCachingHandler();
+            $imageCachingHandler = $this->options['cache.images'];
 
             if (empty($imagePathPublic)) throw new \RuntimeException('$imagePathPublic is not specified in the renderOptions. Please set it.');
 

@@ -4,7 +4,7 @@
         {
             "package": "devmx/Teamspeak3-Library-dev",
             "version": "dev-master",
-            "source-reference": "44e644abad611125d580afddc929495babb5b179"
+            "source-reference": "55c56850df64a2489b7d0d8d5a6e0512173c02ec"
         },
         {
             "package": "pimple/pimple",
