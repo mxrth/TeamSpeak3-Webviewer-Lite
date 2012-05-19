@@ -19,384 +19,146 @@
  */
 
 namespace devmx\TSWebViewer;
+use devmx\TSWebViewer\Caching\FileCache;
 
 /**
  * Provides rendering options for \devmx\TSWebViewer\TSWebViewer;
  * @author Maximilian Narr
  * @since 1.0
  */
-class RenderOptions
+class RenderOptions extends \Pimple
 {
-
-    protected $headTags = false;
-    protected $renderServerQueryClients = false;
-    protected $connectLink = true;
-    protected $connectLinkTarget = false;
-    protected $stylesheetURL = null;
-    protected $imagePath = null;
-    protected $showImages = true;
-    protected $showCountryIcons = false;
-    protected $countryIconsUrl = null;
-    protected $countryIconsPath = null;
-    protected $countryIconsFileType = null;
-    protected $downloadCustomImages = true;
-    protected $divClass = "devmx-webviewer";
-    protected $HTMLCaching = false;
-
-    /**
-     * @var \devmx\TSWebViewer\Caching\CachingInterface
-     */
-    protected $HTMLCachingHandler = null;
-    protected $imageCaching = false;
-    protected $imageCachingPathPublic = "cache";
-
-    /**
-     * @var \devmx\TSWebViewer\Caching\CachingInterface
-     */
-    protected $imageCachingHandler = null;
-
-    /**
-     * Sets/ Gets if the viewer should be output as a standalone html page
-     * @param bool|null $use If the viewer should be output in a standalone html page.
-     * @return bool true if the viewer should be output in a standalone html page, else false. If $use is specified it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function headTags($use = null)
-    {
-        if (is_null($use))
-        {
-            return $this->headTags;
-        }
-        else
-        {
-            $this->headTags = $use;
-            return $this->headTags;
-        }
-    }
-
-    /**
-     * If ServerQueryClients should be rendered by the viewer
-     * @param bool|null $render If ServerQueryClients should be rendered by the viewer.
-     * @return mixed true if ServerQueryClients should be rendered else false. If $render is specified it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function renderServerQueryClients($render = null)
-    {
-        if (is_null($render))
-        {
-            return $this->renderServerQueryClients;
-        }
-        else
-        {
-            $this->renderServerQueryClients = $render;
-            return $this->renderServerQueryClients;
-        }
-    }
-
-    /**
-     * If a link should be applied to the servername that you can directly connect to the server
-     * @param bool $addLink If a link should be applied to the servername [optional]
-     * @return bool If a link should be applied. If $addLink is set it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function connectLink($addLink = null)
-    {
-        if (is_null($addLink))
-        {
-            return $this->connectLink;
-        }
-        else
-        {
-            $this->connectLink = $addLink;
-            return $this->connectLink;
-        }
-    }
-
-    /**
-     * If you have set 127.0.0.1 or localhost in the main config, you can set here the public ip of the server
-     * @param string $linkTarget Public ip adress or hostname of the teamspeak server
-     * @return string|boolean If you set a custom adress before this will be returned else it returns false.
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function connectLinkTarget($linkTarget = null)
-    {
-        if (is_null($linkTarget))
-        {
-            if (is_string($this->connectLinkTarget)) return $this->connectLinkTarget;
-            else return false;
-        }
-        else
-        {
-            $this->connectLinkTarget = (string) $linkTarget;
-            return $this->connectLinkTarget;
-        }
-    }
-
-    /**
-     * URL to the stylesheet, the viewer should use
-     * @param string|null $url URL to the stylesheet. If $url = null it returns the current value of $stylesheetURL
-     * @return string URL to the stylesheet. If $url is specified it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function stylesheetURL($url = null)
-    {
-        if (is_null($url))
-        {
-            return $this->stylesheetURL;
-        }
-        else
-        {
-            $this->stylesheetURL = $url;
-            return $this->stylesheetURL;
-        }
-    }
-
-    /**
-     * Path to the standard group images. The images must be in format 100.png, 200.png, 300.png, 500.png and 600.png
-     * @param string|null $path Path to the images. If $path = null it returns the current value of $imgPath
-     * @return string Path to images.
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function imgPath($path = null)
-    {
-        if (is_null($path)) return $this->imagePath;
-        else
-        {
-            if (substr($path, -1) != "/") $path .= "/";
-            $this->imagePath = $path;
-            return $this->imagePath;
-        }
-    }
-
-    /**
-     * If any images should be shown in the webviewer
-     * @param bool|null $show If images should be shown. If $show = null it returns the current value of $showImages
-     * @return bool If images should be shown
-     * @since 1.1
-     * @author Maximilian Narr
-     */
-    public function showImages($show = null)
-    {
-        if (is_null($show)) return $this->showImages;
-        else
-        {
-            $this->showImages = $show;
-            return $this->showImages;
-        }
-    }
-
-    /**
-     * If country icons should be displayed
-     * @param bool|null $show If country icons should be shown. If $show = null it returns the current value of $showCountryIcons
-     * @return bool If country icons should be shown
-     * @since 1.1
-     * @author Maximilian Narr
-     */
-    public function showCountryIcons($show = null)
-    {
-        if (is_null($show)) return $this->showCountryIcons;
-        else
-        {
-            $this->showCountryIcons = $show;
-            return $this->showCountryIcons;
-        }
-    }
-
-    /**
-     * Public url to the country icons directory
-     * @param string|null $url Url to the directory of the country icons. If $url = null it returns the current value of $countryIconsUrl;
-     * @return string Url to the country icons directory
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function countryIconsUrl($url = null)
-    {
-        if (is_null($url)) return $this->countryIconsUrl;
-        else
-        {
-            if (substr($url, -1) !== "/") $this->countryIconsUrl = $url . "/";
-            else $this->countryIconsUrl = $url;
-            return $this->countryIconsUrl;
-        }
-    }
-
-    /**
-     * Server side path to the country icons diectory
-     * @param string|null $path Path to the directory of the country icons. If $path = null it returns the current value of $countryIconsPath
-     * @return string Path to the country icons
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function countryIconsPath($path = null)
-    {
-        if (is_null($path)) return $this->countryIconsPath;
-        else
-        {
-            if (substr($path, -1) !== "/") $this->countryIconsPath = $path . "/";
-            else $this->countryIconsPath = $path;
-            return $this->countryIconsPath;
-        }
-    }
-
-    /**
-     * Sets the file type of the country icon
-     * @param string|null $type Filetype of the country icons. If $type = null it returnst the current value of $countryIconsFileType;
-     * @return string File type of the country icons
-     * @since 1.1
-     * @author Maximilian Narr
-     */
-    public function countryIconsFileType($type = null)
-    {
-        if (is_null($type)) return $this->countryIconsFileType;
-        else
-        {
-            $this->countryIconsFileType = str_replace(".", "", $type);
-            return $this->countryIconsFileType;
-        }
-    }
-
-    /**
-     * If custom icons should downloaded from the ts server
-     * @param boolean|null $download If icons should be downloaded set true, else false. If $download is not set, it will return the current set option
-     * @return bool True if icons should be downloaded, else false. Returns currently set options of $download is null
-     */
-    public function downloadCustomImages($download = null)
-    {
-        if (is_null($download))
-        {
-            return $this->downloadCustomImages;
-        }
-        else
-        {
-            $this->downloadCustomImages = $download;
-            return $this->downloadCustomImages;
-        }
-    }
-
-    /**
-     * Class of the div around the viewer
-     * @param string|null $class name of the class. If $class = null it returns the current value of $divClass 
-     * @return string name of the class.
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function divClass($class = null)
-    {
-        if (is_null($class))
-        {
-            return $this->divClass;
-        }
-        else
-        {
-            $this->divClass = $class;
-            return $this->divClass;
-        }
-    }
-
-    /**
-     * If HTML output should be cached
-     * @param bool|null $enabled If HTML output should be cached. If $enabled = null it only returns the current value of $HTMLCaching
-     * @return bool If HTML caching is enabled. If $enabled is set as well it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function HTMLCaching($enabled = null)
-    {
-        if (is_null($enabled))
-        {
-            return $this->HTMLCaching;
-        }
-        else
-        {
-            $this->HTMLCaching = $enabled;
-            return $this->HTMLCaching;
-        }
-    }
-
-    /**
-     * Handler which handles the HTML Caching
-     * @param \devmx\TSWebViewer\Caching\CachingInterface $handler Caching handler
-     * @return \devmx\TSWebViewer\Caching\CachingInterface If $handler is specified it will set it before
-     * @since 1.1
-     * @author Maximilian Narr
-     */
-    public function HTMLCachingHandler($handler = null)
-    {
-        if (is_null($handler))
-        {
-            return $this->HTMLCachingHandler;
-        }
-        else
-        {
-            $this->HTMLCachingHandler = $handler;
-            return $this->HTMLCachingHandler;
-        }
-    }
-
-    /**
-     * If image caching should be used. Default: no
-     * @param bool|null $use True if image caching should be used, else false
-     * @return bool If image caching should be used
-     * @since 1.0
-     * @author Maximilian Narr
-     */
-    public function imageCaching($use = null)
-    {
-        if (is_null($use))
-        {
-            return $this->imageCaching;
-        }
-        else
-        {
-            $this->imageCaching = $use;
-            return $this->imageCaching;
-        }
-    }
-
-    /**
-     * Path to the image cache which is accessible by the public
-     * @param string|null $path Public path to the image cache.
-     * @return string Public path of the image cache. If $path is specified it will set it before
-     * @since 1.0
-     * @author Maximilian Narr
-     * @example http://example.com/imagecache/
-     */
-    public function imageCachingPathPublic($path = null)
-    {
-        if (is_null($path)) return $this->imageCachingPathPublic;
-        else
-        {
-            if (substr($path, -1) !== "/") $this->imageCachingPathPublic = $path . "/";
-            else $this->imageCachingPathPublic = $path;
-            return $this->imageCachingPathPublic;
-        }
-    }
-
-    /**
-     * Handler which handles the image Caching
-     * @param \devmx\TSWebViewer\Caching\CachingInterface $handler Caching handler
-     * @return \devmx\TSWebViewer\Caching\CachingInterface If $handler is specified it will set it before
-     * @since 1.1
-     * @author Maximilian Narr
-     */
-    public function ImageCachingHandler($handler = null)
-    {
-        if (is_null($handler))
-        {
-            return $this->imageCachingHandler;
-        }
-        else
-        {
-            $this->imageCachingHandler = $handler;
-            return $this->imageCachingHandler;
-        }
-    }
+    
+    public function __construct() {
+        /**
+         * If the viewer should be output as a standalone html page 
+         */
+        $this['html.generate_head_tags'] = true;
+        
+        /**
+         * If ServerQueryClients should be rendered by the viewer 
+         */
+        $this['render_serverquery_clients'] = false;
+        
+        /**
+         * If a link should be applied to the servername that you can directly connect to the server
+         */
+        $this['connectlink.show'] = true;
+        
+        /**
+         * If you have set 127.0.0.1 or localhost in the main config, you can set here the public ip of the server
+         */
+        $this['connectlink.target'] = null;
+        
+        /**
+         * URL to the stylesheet, the viewer should use
+         */
+        $this['stylesheet.url'] = function($c) {
+          return $c['root.public'].'css/style.css';  
+        };
+        
+        /**
+         * Path to the standard group images. The images must be in format 100.png, 200.png, 300.png, 500.png and 600.png
+         */
+        $this['images.path'] = function($c) {
+            return $c['root.public'].'img/'; 
+        };
+        
+        /**
+         * If any images should be shown in the webviewer
+         */
+        $this['images.show'] = true;
+        
+        /**
+         * If country icons should be displayed 
+         */
+        $this['country_icons.show'] = false;
+        
+        /**
+         * Public url to the country icons directory 
+         */
+        $this['country_icons.url'] = function($c) {
+          return $c['root.public'].'img/countires'; 
+        };
+        
+        /**
+         * Server side path to the country icons diectory
+         */
+        $this['country_icons.path'] = function($c) {
+            return $c['root.server'].'img/countries';
+        };
+        
+        /**
+         * Sets the file type of the country icon 
+         */
+        $this['country_icons.filetype'] = 'png';
+        
+        /**
+         * If custom icons should downloaded from the ts server
+         */
+        $this['download_custom_icons'] = true;
+        
+        /**
+         * Class of the div around the viewer
+         */
+        $this['html.div_class'] = "devmx-webviewer";
+        
+        $this['enable_caching'] = false;
+        
+        /**
+         * If HTML output should be cached
+         */
+        $this['cache.html.enable'] = function($c){return $c['enable_caching'];};
+        
+        /**
+         * The cache path 
+         */
+        $this['cache.file.path'] = function($c) {
+            return $c['root.server'].'cache';
+        };
+        
+        /**
+         * The file chacheHandler 
+         */
+        $this['cache.file'] = $this->share(function($c){
+            return new FileCache($c['cache.file.path']);
+        });
+        
+        /**
+         * Handler which handles the HTML Caching
+         * Defaults to a file cache
+         */
+        $this['cache.html'] = $this->raw('cache.file');
+        
+        /**
+         * If Image caching should be enabled 
+         */
+        $this['cache.images.enable'] = function($c) {return $c['enable_caching'];};
+        
+        /**
+         * The image cache handler 
+         */
+        $this['cache.images'] = $this->raw('cache.file');
+        
+        $this['renderer'] = $this->share(function($c) {
+            return new \devmx\TSWebViewer\TSWebViewer($c['ts3']['query'], $c);
+        });
+        
+        /**
+         * Preconfigured ts3 container
+         * needs the host, the query.port
+         */
+        $this['ts3'] = new \devmx\Teamspeak3\SimpleContainer;
+        $this['ts3']['query.transport.decorators']['order'] = array(); //we don't need any decorators;
+        $this['ts3']['query'] = $this->share($this['ts3']->extend('query',function($query,$c) {
+            $query->connect();
+            if($c['login.name'] !== '') {
+                $query->login($c['login.name'], $c['login.pass']);
+            }
+            $query->useByPort($c['vserver.port']);
+            return $query;
+        }));
+    }  
 
 }
 
