@@ -635,7 +635,7 @@ class TSWebViewer
         try
         {
             // Initialize TCP if not initialized yet
-            if ($this->tcp == null) $this->tcp = new \devmx\Transmission\TCP($this->host, $fileTransferPort);
+            if ($this->tcp == null) $this->tcp = new \devmx\Transmission\TCP($this->options['ts3']['host'], $fileTransferPort);
 
             // Establish TCP if not yet established
             if (!$this->tcp->isEstablished()) $this->tcp->establish();
