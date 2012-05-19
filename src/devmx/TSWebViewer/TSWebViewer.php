@@ -20,8 +20,11 @@
 
 namespace devmx\TSWebViewer;
 
-use devmx\Teamspeak3\Query;
+use devmx\Teamspeak3\Query\Transport\QueryTransport;
 use devmx\Teamspeak3\Query\Transport\TransportInterface;
+use devmx\Transmission\TCP;
+use devmx\Teamspeak3\Query\Transport\Common\ResponseHandler;
+use devmx\Teamspeak3\Query\Transport\Common\CommandTranslator;
 
 class TSWebViewer
 {
@@ -33,7 +36,7 @@ class TSWebViewer
     private $password;
 
     /**
-     * @var devmx\TeamSpeak3\Query\QueryTransport;
+     * @var devmx\TeamSpeak3\Query\Transport\QueryTransport;
      */
     private $query;
 
@@ -91,8 +94,9 @@ class TSWebViewer
      */
     private function establishConnection()
     {
-        $this->query = Query\QueryTransport::getCommon($this->host, $this->queryPort);
-
+        $tcp = new TCP($this->host, $this->queryPort);
+        $this->query = new QueryTransport($tcp, new CommandTranslator(), new ResponseHandler());
+                
         try
         {
             $this->query->connect();

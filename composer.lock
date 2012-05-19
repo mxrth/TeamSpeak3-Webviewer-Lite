@@ -1,0 +1,18 @@
+{
+    "hash": "37d228b14b6c475275a0ff08c898d49c",
+    "packages": [
+        {
+            "package": "devmx/Teamspeak3-Library-dev",
+            "version": "dev-master",
+            "source-reference": "44e644abad611125d580afddc929495babb5b179"
+        }
+    ],
+    "packages-dev": null,
+    "aliases": [
+
+    ],
+    "minimum-stability": "dev",
+    "stability-flags": {
+        "devmx/teamspeak3-library-dev": 20
+    }
+}
