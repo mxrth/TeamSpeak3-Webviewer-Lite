@@ -642,7 +642,7 @@ class TSWebViewer
 
             $downloader = new \devmx\Teamspeak3\FileTransfer\Downloader($this->tcp, $key, $fileSize);
 
-            $icon = $downloader->transfer();
+            $icon = $downloader->download();
             $this->tcp->close();
         }
         catch (Exception $ex)
