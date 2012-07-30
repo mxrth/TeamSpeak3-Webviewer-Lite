@@ -1,0 +1,16 @@
+{
+    "name": "modern-dark",
+    "dependency": "base",
+    "author": {
+        "name" : "Maximilian Narr",
+        "email" : "maxe.nr@live.de"
+    },
+    "files":{
+        "css": "c/modern-dark.css",
+        "images": "i/",
+        "group-images": "i/",
+        "countries": "",
+        "templates": ""
+    },
+    "filetype": "png"
+}
