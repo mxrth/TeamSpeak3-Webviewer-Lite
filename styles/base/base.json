@@ -1,0 +1,16 @@
+{
+    "name": "base",
+    "dependency": "",
+    "author": {
+        "name" : "Maximilian Narr",
+        "email" : "maxe.nr@live.de"
+    },
+    "files":{
+        "css": "c/base.css",
+        "images": "i/",
+        "group-images": "i/",
+        "countries": "i/countries/",
+        "templates": "t/"
+    },
+    "filetype": "png"
+}

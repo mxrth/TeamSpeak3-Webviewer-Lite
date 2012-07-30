@@ -69,54 +69,31 @@ class RenderOptions extends \Pimple
         
         
         /**
-         * URL to the stylesheet, the viewer should use
+         * Path of the style directory
          */
-        $this['stylesheet.url'] = function($c) {
-          return $c['root.public'].'css/style.css';  
+        $this['style.directory'] = function($c) {
+            return $c['root.server'].'styles/';
         };
-        
         
         /**
-         * Path to the standard group images. The images must be in format 100.png, 200.png, 300.png, 500.png and 600.png
+         * URL to the stylesheet, the viewer should use
          */
-        $this['images.path'] = function($c) {
-            return $c['root.public'].'img/'; 
-        };
-        
+        $this['style'] = "base";
+
+        /**
+         * Path to styles
+         */
+        $this['style.path'] = "styles/";    
         
         /**
          * If any images should be shown in the webviewer
          */
-        $this['images.show'] = true;
-        
+        $this['images.show'] = true;  
         
         /**
          * If country icons should be displayed 
          */
         $this['country_icons.show'] = true;
-        
-        
-        /**
-         * Public url to the country icons directory 
-         */
-        $this['country_icons.url'] = function($c) {
-          return $c['root.public'].'img/countries/'; 
-        };
-        
-        
-        /**
-         * Server side path to the country icons diectory
-         */
-        $this['country_icons.path'] = function($c) {
-            return $c['root.server'].'img/countries/';
-        };
-        
-        
-        /**
-         * Sets the file type of the country icon 
-         */
-        $this['country_icons.filetype'] = 'png';
-        
         
         /**
          * If custom icons should downloaded from the ts server

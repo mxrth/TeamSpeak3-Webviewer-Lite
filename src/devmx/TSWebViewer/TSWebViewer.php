@@ -2,7 +2,7 @@
 
 /**
  *  This file is part of devMX TS3 Webviewer Lite.
- *  Copyright (C) 2012  Maximilian Narr
+ *  Copyright (C) 2012  Maximilian Narr <maxe.nr@live.de>
  *
  *  devMX Webviewer Lite is free software: you can redistribute it and/or modify
  *  it under the terms of the GNU General Public License as published by
@@ -29,6 +29,9 @@ use devmx\Teamspeak3\Query\Transport\Common\CommandTranslator;
 class TSWebViewer
 {
 
+    /**
+     * @var devmx\TSWebViewer\RenderOptions;
+     */
     private $options;
 
     /**
@@ -67,9 +70,10 @@ class TSWebViewer
     private $channelGroupList;
 
     /**
-     * @var devmx\TSWebViewer\RenderOptions;
+     * @var \devmx\TSWebViewer\Style\Style;
      */
-    private $renderOptions;
+    private $style;
+    
     private $renderTimeStart;
     private $renderTimeEnd;
 
@@ -140,6 +144,8 @@ class TSWebViewer
             // Sort clientlist
             $this->sortClientList();
             $this->applyAllFilters();
+
+            $this->style = new \devmx\TSWebViewer\Style\Style($this->options);
         }
         catch (\RuntimeException $ex)
         {
@@ -156,7 +162,7 @@ class TSWebViewer
         if ($this->options['html.generate_head_tags'])
         {
             $div = sprintf($div, $this->options['html.div_class'], $this->renderServerName() . $this->getChannels(0));
-            $html .= sprintf($head, $this->options['stylesheet.url'], $div);
+            $html .= sprintf($head, $this->style->cssPath, $div);
         }
         // If no head-tags should be used
         else
@@ -433,10 +439,11 @@ class TSWebViewer
 
             $data = $this->renderIcon($clientIconId) . $data;
         }
-
+      
         // If country icons should be used
         if ($this->options['country_icons.show'])
         {
+            
             if ($clientItem['client_country'] !== "")
             {
                 $country = $clientItem['client_country'];
@@ -497,9 +504,9 @@ class TSWebViewer
     {
         $country = strtolower($country);
 
-        $serverPath = $this->options['country_icons.path'];
-        $publicPath = $this->options['country_icons.url'];
-        $fileType = $this->options['country_icons.filetype'];
+        $serverPath = $this->style->countryImagePathLocal;
+        $publicPath = $this->style->countryImagePath;
+        $fileType = $this->style->filetype;
 
         if (is_null($serverPath)) throw new \RuntimeException('$countryIconsPath is not specified. Plase set it.');
         if (is_null($publicPath)) throw new \RuntimeException('$countryIconsUrl is not specified. Please set it.');
@@ -541,7 +548,7 @@ class TSWebViewer
             // Check if $imgPath is available
             if ($this->options['images.path'] == null) throw new \RuntimeException('$imgPath is not specified in the renderOptions. Please set it.');
 
-            $styleTag = sprintf($style, $this->options['images.path'] . $iconId . ".png");
+            $styleTag = sprintf($style, $this->style->imagePath . $iconId . ".png");
             return sprintf($imageHtml, $styleTag);
         }
         // No standard image --> download it
@@ -797,17 +804,17 @@ class TSWebViewer
     {
         return strcasecmp($a['client_nickname'], $b['client_nickname']);
     }
-    
+
     private function applyAllFilters()
-    {       
+    {
         // Check for list filters
-        if($this->options['filter.whitelist.enabled'] || $this->options['filter.blacklist.enabled'])
+        if ($this->options['filter.whitelist.enabled'] || $this->options['filter.blacklist.enabled'])
         {
             $list = new \devmx\TSWebViewer\Filters\Lists\ListFilter($this->serverinfo, $this->channellist, $this->clientlist, $this->serverGroupList, $this->channelGroupList, $this->options);
-            $this->applyFilter($list);        
+            $this->applyFilter($list);
         }
     }
-    
+
     private function applyFilter(\devmx\TSWebViewer\Filters\FilterBase $filterObj)
     {
         $this->serverinfo = $filterObj->filterServerInfo();

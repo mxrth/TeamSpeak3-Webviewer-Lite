@@ -90,49 +90,49 @@
 .devmx-webviewer .channel-normal,
 .devmx-webviewer * .channel-normal
 {
-    background-image: url("../img/channel-normal.png");
+    background-image: url("../i/channel-normal.png");
 }
 
 /* Full channel */
 .devmx-webviewer .channel-full,
 .devmx-webviewer * .channel-full
 {
-    background-image: url("../img/channel-full.png");
+    background-image: url("../i/channel-full.png");
 }
 
 /* Channel with password (channel Icon) */
 .devmx-webviewer .channel-password,
 .devmx-webviewer * .channel-password
 {
-    background-image: url("../img/channel-password.png");
+    background-image: url("../i/channel-password.png");
 }
 
 /* Channel with password (Lock icon) */
 .devmx-webviewer .channel-password-right,
 .devmx-webviewer * .channel-password-right
 {
-    background-image: url("../img/channel-password-right.png"); 
+    background-image: url("../i/channel-password-right.png"); 
 }
 
 /* Default channel */
 .devmx-webviewer .channel-home,
 .devmx-webviewer * .channel-home
 {
-    background-image: url("../img/channel-home.png");
+    background-image: url("../i/channel-home.png");
 }
 
 /* Moderated channel */
 .devmx-webviewer .channel-moderated,
 .devmx-webviewer * .channel-moderated
 {
-    background-image: url("../img/channel-moderated.png");
+    background-image: url("../i/channel-moderated.png");
 }
 
 /* Channel with 48khz codec */
 .devmx-webviewer .channel-48khz,
 .devmx-webviewer * .channel-48khz
 {
-    background-image: url("../img/channel-48khz.png");
+    background-image: url("../i/channel-48khz.png");
 }
 
 
@@ -140,7 +140,7 @@
 .devmx-webviewer .server-image,
 .devmx-webviewer * .server-image
 {
-    background-image: url("../img/server.png");
+    background-image: url("../i/server.png");
 }
 
 
@@ -149,75 +149,75 @@
 .devmx-webviewer .client-normal,
 .devmx-webviewer * .client-normal
 {
-    background-image: url("../img/normal-client.png");
+    background-image: url("../i/normal-client.png");
 }
 
 /* talking client */
 .devmx-webviewer .client-talking,
 .devmx-webviewer * .client-talking
 {
-    background-image: url("../img/client-talking.png");
+    background-image: url("../i/client-talking.png");
 }
 
 /* channelcommander */
 .devmx-webviewer .client-channel-commander,
 .devmx-webviewer * .client-channel-commander
 {
-    background-image: url("../img/client-channel-commander.png");
+    background-image: url("../i/client-channel-commander.png");
 }
 
 .devmx-webviewer .client-channel-commander-talking,
 .devmx-webviewer * .client-channel-commander-talking
 {
-    background-image: url("../img/client-channel-commander-talking.png");
+    background-image: url("../i/client-channel-commander-talking.png");
 }
 
 /* mic muted client */
 .devmx-webviewer .client-input-muted,
 .devmx-webviewer * .client-input-muted
 {
-    background-image: url("../img/input-muted.png");
+    background-image: url("../i/input-muted.png");
 }
 
 /* speaker muted client */
 .devmx-webviewer .client-output-muted,
 .devmx-webviewer * .client-output-muted
 {
-    background-image: url("../img/output-muted.png");
+    background-image: url("../i/output-muted.png");
 }
 
 /* hardware mic muted client */
 .devmx-webviewer .client-input-muted-hardware,
 .devmx-webviewer * .client-input-muted-hardware
 {
-    background-image: url("../img/hardware-input-muted.png");
+    background-image: url("../i/hardware-input-muted.png");
 }
 
 /* hardware speaker muted client */
 .devmx-webviewer .client-output-muted-hardware
 .devmx-webviewer * .client-output-muted-hardware
 {
-    background-image: url("../img/hardware-output-muted.png");
+    background-image: url("../i/hardware-output-muted.png");
 }
 
 /* away client */
 .devmx-webviewer .client-away,
 .devmx-webviewer * .client-away
 {
-    background-image: url("../img/client-away.png");
+    background-image: url("../i/client-away.png");
 }
 
 /* Client with priority speaker */
 .devmx-webviewer .client-priority-speaker,
 .devmx-webviewer * .client-priority-speaker
 {
-    background-image: url("../img/client-priority-speaker.png");
+    background-image: url("../i/client-priority-speaker.png");
 }
 
 .devmx-webviewer .client-query,
 .devmx-webviewer * .client-query
 {
-    background-image: url("../img/client-query.png");
+    background-image: url("../i/client-query.png");
 }
 
 
@@ -254,35 +254,35 @@
 .devmx-webviewer .spacer-line,
 .devmx-webviewer * .spacer-line
 {
-    background: url(../img/linie.png) repeat-x;
+    background: url(../i/linie.png) repeat-x;
 }
 
 /* --- */
 .devmx-webviewer .spacer-dash,
 .devmx-webviewer * .spacer-dash
 {
-    background: url(../img/bs.png) repeat-x;
+    background: url(../i/bs.png) repeat-x;
 }
 
 /* -.- */
 .devmx-webviewer .spacer-line-point,
 .devmx-webviewer * .spacer-line-point
 {
-    background: url(../img/bspunkt.png) repeat-x;
+    background: url(../i/bspunkt.png) repeat-x;
 }
 
 /* -.. */
 .devmx-webviewer .spacer-line-double-point,
 .devmx-webviewer * .spacer-line-double-point
 {
-    background: url(../img/bsdpunkt.png) repeat-x;
+    background: url(../i/bsdpunkt.png) repeat-x;
 }
 
 /* ... */
 .devmx-webviewer .spacer-point,
 .devmx-webviewer * .spacer-point
 {
-    background: url(../img/punkt.png) repeat-x;
+    background: url(../i/punkt.png) repeat-x;
 }
 
 /* repeat spacer */

@@ -37,7 +37,7 @@ $c['ts3']['login.pass'] = '';
  * If the viewer should be cached (recommended)
  * default: true
  */
-$c['enable_caching'] = FALSE;
+$c['enable_caching'] = false;
 
 /**
  * If the viewer should download custom icons (recommended) -->
