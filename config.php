@@ -37,7 +37,7 @@ $c['ts3']['login.pass'] = '';
  * If the viewer should be cached (recommended)
  * default: true
  */
-$c['enable_caching'] = true;
+$c['enable_caching'] = FALSE;
 
 /**
  * If the viewer should download custom icons (recommended) -->
@@ -62,5 +62,29 @@ $c['country_icons.show'] = true;
  * If query clients should be rendered in the viewer (not recommended)
  * default: false
  */
-$c['render_serverquery_clients'] = false;
+$c['render.query_clients'] = false;
+
+
+/**
+ * If whitelist rendering should be enabled
+ */
+$c['render.whitelist.enabled'] = false;
+
+/**
+ * Array of channel-ids of channels which should be rendered.
+ * All other channels WONT be rendered
+ */
+$c['render.whitelist'] = array();
+
+
+/**
+ * If blacklist rendering should be enabled
+ */
+$c['render.blacklist.enabled'] = false;
+
+/**
+ * Array of channel-ids of channel which should NOT be rendered.
+ * All other channels WILL BE rendered
+ */
+$c['render.blacklist'] = array();
 ?>

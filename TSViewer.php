@@ -17,7 +17,6 @@
  *  You should have received a copy of the GNU General Public License
  *  along with devMX TS3 Webviewer Lite.  If not, see <http://www.gnu.org/licenses/>.
  */
-
 require_once "vendor/autoload.php";
 
 // Set absolute directory of the server
@@ -51,9 +50,15 @@ $c = new devmx\TSWebViewer\RenderOptions();
 $c['root.public'] = $rootDirPublic;
 $c['root.server'] = $rootDirServer;
 
-//configure the container
-include('config.php');
-
+// Configure the container
+if (file_exists("config.php"))
+{
+    include('config.php');
+}
+else
+{
+    // Configfile does not exist
+}
 
 header("Content-Type: text/html; charset=utf-8");
 

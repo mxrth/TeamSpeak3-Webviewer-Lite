@@ -30,7 +30,7 @@ class TSWebViewer
 {
 
     private $options;
-    
+
     /**
      * @var devmx\TeamSpeak3\Query\Transport\QueryTransport;
      */
@@ -73,7 +73,7 @@ class TSWebViewer
     private $renderTimeStart;
     private $renderTimeEnd;
 
-    function __construct(  TransportInterface $query, $options)
+    function __construct(TransportInterface $query, $options)
     {
         $this->query = $query;
         $this->options = $options;
@@ -177,7 +177,7 @@ class TSWebViewer
         // If file needs to be cached
         if ($this->options['cache.html.enable'])
         {
-            $HTMLCachingHandler->cache(md5($this->options['ts3']['host'] . $this->options['ts3']['query.port']. $this->options['ts3']['vserver.port']), $html);
+            $HTMLCachingHandler->cache(md5($this->options['ts3']['host'] . $this->options['ts3']['query.port'] . $this->options['ts3']['vserver.port']), $html);
         }
 
         $this->renderTimeEnd = microtime(true);
@@ -283,7 +283,7 @@ class TSWebViewer
             if ($client['cid'] == $cid)
             {
                 // Skip client if ServerQueryClient
-                if (!$this->options['render_serverquery_clients'] && $client['client_type'] == (int) 1) continue;
+                if (!$this->options['render.query_clients'] && $client['client_type'] == (int) 1) continue;
 
                 $html .= '<div class="client">';
                 $html .= sprintf('%s<span class="ts-image %s">&nbsp;</span><span class="label">%s</span>', $this->getClientImages($client), $this->getClientStatusImage($client), $this->Utf8ToHtml($client['client_nickname']));

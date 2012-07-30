@@ -35,20 +35,38 @@ class RenderOptions extends \Pimple
          */
         $this['html.generate_head_tags'] = true;
         
+        
         /**
          * If ServerQueryClients should be rendered by the viewer 
          */
-        $this['render_serverquery_clients'] = false;
+        $this['render.query_clients'] = false;
+        
+        
+        /**
+         * Render options for blacklist
+         */
+        $this['render.blacklist.enabled'] = false;
+        $this['render.blacklist'] = array();
+        
+        
+        /**
+         * Render options for whitelist
+         */
+        $this['render.whitelist.enabled'] = false;
+        $this['render.whitelist'] = array();
+        
         
         /**
          * If a link should be applied to the servername that you can directly connect to the server
          */
         $this['connectlink.show'] = true;
         
+        
         /**
          * If you have set 127.0.0.1 or localhost in the main config, you can set here the public ip of the server
          */
         $this['connectlink.target'] = null;
+        
         
         /**
          * URL to the stylesheet, the viewer should use
@@ -57,6 +75,7 @@ class RenderOptions extends \Pimple
           return $c['root.public'].'css/style.css';  
         };
         
+        
         /**
          * Path to the standard group images. The images must be in format 100.png, 200.png, 300.png, 500.png and 600.png
          */
@@ -64,51 +83,64 @@ class RenderOptions extends \Pimple
             return $c['root.public'].'img/'; 
         };
         
+        
         /**
          * If any images should be shown in the webviewer
          */
         $this['images.show'] = true;
         
+        
         /**
          * If country icons should be displayed 
          */
-        $this['country_icons.show'] = false;
+        $this['country_icons.show'] = true;
+        
         
         /**
          * Public url to the country icons directory 
          */
         $this['country_icons.url'] = function($c) {
-          return $c['root.public'].'img/countires'; 
+          return $c['root.public'].'img/countries/'; 
         };
+        
         
         /**
          * Server side path to the country icons diectory
          */
         $this['country_icons.path'] = function($c) {
-            return $c['root.server'].'img/countries';
+            return $c['root.server'].'img/countries/';
         };
+        
         
         /**
          * Sets the file type of the country icon 
          */
         $this['country_icons.filetype'] = 'png';
         
+        
         /**
          * If custom icons should downloaded from the ts server
          */
         $this['download_custom_icons'] = true;
+        
         
         /**
          * Class of the div around the viewer
          */
         $this['html.div_class'] = "devmx-webviewer";
         
+        
+        /**
+         * If caching should be enabled
+         */
         $this['enable_caching'] = false;
+        
         
         /**
          * If HTML output should be cached
          */
         $this['cache.html.enable'] = function($c){return $c['enable_caching'];};
+        
         
         /**
          * The cache path 
@@ -117,6 +149,7 @@ class RenderOptions extends \Pimple
             return $c['root.server'].'cache';
         };
         
+        
         /**
          * The file chacheHandler 
          */
@@ -124,16 +157,19 @@ class RenderOptions extends \Pimple
             return new FileCache($c['cache.file.path']);
         });
         
+        
         /**
          * Handler which handles the HTML Caching
          * Defaults to a file cache
          */
         $this['cache.html'] = $this->raw('cache.file');
         
+        
         /**
          * If Image caching should be enabled 
          */
         $this['cache.images.enable'] = function($c) {return $c['enable_caching'];};
+        
         
         /**
          * The image cache handler 
@@ -143,6 +179,7 @@ class RenderOptions extends \Pimple
         $this['renderer'] = $this->share(function($c) {
             return new \devmx\TSWebViewer\TSWebViewer($c['ts3']['query'], $c);
         });
+        
         
         /**
          * Preconfigured ts3 container
