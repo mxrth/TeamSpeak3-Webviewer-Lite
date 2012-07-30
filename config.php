@@ -68,23 +68,23 @@ $c['render.query_clients'] = false;
 /**
  * If whitelist rendering should be enabled
  */
-$c['render.whitelist.enabled'] = false;
+$c['filter.whitelist.enabled'] = false;
 
 /**
  * Array of channel-ids of channels which should be rendered.
  * All other channels WONT be rendered
  */
-$c['render.whitelist'] = array();
+$c['filter.whitelist'] = array();
 
 
 /**
  * If blacklist rendering should be enabled
  */
-$c['render.blacklist.enabled'] = false;
+$c['filter.blacklist.enabled'] = false;
 
 /**
  * Array of channel-ids of channel which should NOT be rendered.
  * All other channels WILL BE rendered
  */
-$c['render.blacklist'] = array();
+$c['filter.blacklist'] = array();
 ?>

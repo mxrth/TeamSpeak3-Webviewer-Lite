@@ -45,15 +45,15 @@ class RenderOptions extends \Pimple
         /**
          * Render options for blacklist
          */
-        $this['render.blacklist.enabled'] = false;
-        $this['render.blacklist'] = array();
+        $this['filter.blacklist.enabled'] = false;
+        $this['filter.blacklist'] = array();
         
         
         /**
          * Render options for whitelist
          */
-        $this['render.whitelist.enabled'] = false;
-        $this['render.whitelist'] = array();
+        $this['filter.whitelist.enabled'] = false;
+        $this['filter.whitelist'] = array();
         
         
         /**

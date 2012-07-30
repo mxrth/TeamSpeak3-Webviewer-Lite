@@ -139,6 +139,7 @@ class TSWebViewer
 
             // Sort clientlist
             $this->sortClientList();
+            $this->applyAllFilters();
         }
         catch (\RuntimeException $ex)
         {
@@ -795,6 +796,25 @@ class TSWebViewer
     private function sortClientListByName($a, $b)
     {
         return strcasecmp($a['client_nickname'], $b['client_nickname']);
+    }
+    
+    private function applyAllFilters()
+    {       
+        // Check for list filters
+        if($this->options['filter.whitelist.enabled'] || $this->options['filter.blacklist.enabled'])
+        {
+            $list = new \devmx\TSWebViewer\Filters\Lists\ListFilter($this->serverinfo, $this->channellist, $this->clientlist, $this->serverGroupList, $this->channelGroupList, $this->options);
+            $this->applyFilter($list);        
+        }
+    }
+    
+    private function applyFilter(\devmx\TSWebViewer\Filters\FilterBase $filterObj)
+    {
+        $this->serverinfo = $filterObj->filterServerInfo();
+        $this->channellist = $filterObj->filterChannellist();
+        $this->clientlist = $filterObj->filterClientlist();
+        $this->serverGroupList = $filterObj->filterServerGroupList();
+        $this->channelGroupList = $filterObj->filterChannelGroupList();
     }
 
     /**
