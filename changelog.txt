@@ -8,12 +8,21 @@
 ~ Minor Change
 * Fix
 
+v1.2 (2012-08-xx)
++ Issue #10: Added two new styles:
+    - modern-dark (port from devMX TeamSpeak3 Webviewer)
+    - fresh (modern style)
+    Styles can be selected in the configfile.
++ Issue #9: Added a white- and blacklist system to be able to choose the channels which should be displayed.
+
+
 v1.1
 ~ Issue #6: Added possibility to hide icons
 ~ Issue #5: Added support for country icons
 ~ Issue #4: Added support of additional client states, like channelcommander, talking client, ...
 * Issue #2: If a client has a client icon only the clienticon and not the group icons were shown.
 * Issue #3: Fixed but that clients weren't sorted like in the TSClient
+
 
 v1.0
 ! initial release

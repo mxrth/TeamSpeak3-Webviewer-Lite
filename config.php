@@ -94,6 +94,7 @@ $c['country_icons.show'] = true;
  * Name of the style which should be used
  * Currently available:
  *  - base (default style)
+ *  - fresh (modern style)
  *  - modern-dark (ported from the big devMX Webviewer)
  */
 $c['style'] = "base";
