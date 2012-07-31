@@ -1,0 +1,16 @@
+{
+    "name": "fresh",
+    "dependency": "base",
+    "author": {
+        "name" : "Maximilian Narr",
+        "email" : "maxe.nr@live.de"
+    },
+    "files":{
+        "css": "c/fresh.css",
+        "images": "i/",
+        "group-images": "",
+        "countries": "",
+        "templates": ""
+    },
+    "filetype": "png"
+}
