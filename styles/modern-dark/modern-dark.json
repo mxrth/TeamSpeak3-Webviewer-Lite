@@ -8,7 +8,7 @@
     "files":{
         "css": "c/modern-dark.css",
         "images": "i/",
-        "group-images": "i/",
+        "group-images": "",
         "countries": "",
         "templates": ""
     },

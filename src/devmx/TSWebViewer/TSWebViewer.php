@@ -546,9 +546,9 @@ class TSWebViewer
         if (in_array($iconId, $standardImages))
         {
             // Check if $imgPath is available
-            if ($this->options['images.path'] == null) throw new \RuntimeException('$imgPath is not specified in the renderOptions. Please set it.');
+            if ($this->style->groupImagePath == null) throw new \RuntimeException('$imgPath is not specified in the renderOptions. Please set it.');
 
-            $styleTag = sprintf($style, $this->style->imagePath . $iconId . ".png");
+            $styleTag = sprintf($style, $this->style->groupImagePath . $iconId . ".png");
             return sprintf($imageHtml, $styleTag);
         }
         // No standard image --> download it
