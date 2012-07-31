@@ -149,7 +149,7 @@
 .devmx-webviewer .client-normal,
 .devmx-webviewer * .client-normal
 {
-    background-image: url("../i/normal-client.png");
+    background-image: url("../i/client-normal.png");
 }
 
 /* talking client */

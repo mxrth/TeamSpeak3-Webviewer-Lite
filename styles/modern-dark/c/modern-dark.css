@@ -22,7 +22,7 @@
 .devmx-webviewer .client-talking,
 .devmx-webviewer * .client-talking
 {
-    background-image: url("../i/normal-client.png");
+    background-image: url("../i/client-normal.png");
 }
 
 /* talking channelcommander */
