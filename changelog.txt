@@ -14,6 +14,7 @@ v1.2 (2012-08-xx)
     - fresh (modern style)
     Styles can be selected in the configfile.
 + Issue #9: Added a white- and blacklist system to be able to choose the channels which should be displayed.
+~ Issue #11: Added support for talkpower-granted icons.
 
 
 v1.1
