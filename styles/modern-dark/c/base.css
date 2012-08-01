@@ -215,6 +215,13 @@
     background-image: url("../i/client-priority-speaker.png");
 }
 
+/* Client with granted talkpower */
+.devmx-webviewer * .client-talkpower-granted,
+.devmx-webviewer * .client-talkpower-granted
+{
+    background-image: url("../i/client-talkpower-granted.png");
+}
+
 .devmx-webviewer .client-query,
 .devmx-webviewer * .client-query
 {

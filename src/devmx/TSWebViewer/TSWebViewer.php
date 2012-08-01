@@ -73,7 +73,6 @@ class TSWebViewer
      * @var \devmx\TSWebViewer\Style\Style;
      */
     private $style;
-    
     private $renderTimeStart;
     private $renderTimeEnd;
 
@@ -401,6 +400,9 @@ class TSWebViewer
         $style = '<span class="ts-image image-right %s">&nbsp;</span>';
         $data = "";
 
+        $channelList = $this->channellist->toAssoc('cid');
+        $clientChannel = $channelList[$clientItem['cid']];
+
         $channelGroupId = $clientItem['client_channel_group_id'];
         $serverGroupIds = explode(",", $clientItem['client_servergroups']);
 
@@ -416,6 +418,21 @@ class TSWebViewer
         if ($clientItem['client_is_priority_speaker'] == 1)
         {
             $data .= sprintf($style, "client-priority-speaker");
+        }
+
+        // Check if client is in a moderated channel
+        if ($clientChannel['channel_needed_talk_power'] > 0)
+        {
+            if ($clientItem['client_is_talker'] == 0)
+            {
+                // Client has no talkpower
+                $data = sprintf($style, "client-input-muted") . $data;
+            }
+            else
+            {
+                // Client has talkpower
+                $data = sprintf($style, "client-talkpower-granted") . $data;
+            }
         }
 
         // Check if channelgroup has an icon
@@ -439,11 +456,11 @@ class TSWebViewer
 
             $data = $this->renderIcon($clientIconId) . $data;
         }
-      
+
         // If country icons should be used
         if ($this->options['country_icons.show'])
         {
-            
+
             if ($clientItem['client_country'] !== "")
             {
                 $country = $clientItem['client_country'];
