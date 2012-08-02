@@ -8,7 +8,7 @@
 ~ Minor Change
 * Fix
 
-v1.2 (2012-08-xx)
+v1.2 (2012-08-02)
 + Issue #10: Added two new styles:
     - modern-dark (port from devMX TeamSpeak3 Webviewer)
     - fresh (modern style)
