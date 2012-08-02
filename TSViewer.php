@@ -60,12 +60,25 @@ else
     // Configfile does not exist
 }
 
-header("Content-Type: text/html; charset=utf-8");
-
 // Render viewer
 try
 {
-    echo($c['renderer']->renderServer());
+    $html = $c['renderer']->renderServer();
+
+    // Check if script should be outputted
+    if (isset($_GET['script']) && $_GET['script'] == "true")
+    {
+        header("Content-Type: text/javascript; charset=utf-8");
+
+        $escaped = str_replace('"', @'\"', $html);
+        $html = 'document.write("' . $escaped . '");';
+        echo($html);
+    }
+    else
+    {
+        header("Content-Type: text/html; charset=utf-8");
+        echo($html);
+    }
 }
 catch (Exception $ex)
 {
