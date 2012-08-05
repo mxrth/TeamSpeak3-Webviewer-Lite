@@ -1,30 +1,23 @@
 {
-    "hash": "86e1f1dc32c776cf82143c3409eb1722",
+    "hash": "e757aaa71814c3d67d7f2f79702df5ee",
     "packages": [
         {
-            "package": "devmx/Teamspeak3-Library-dev",
+            "package": "devmx/Teamspeak3-Library",
             "version": "dev-master",
-            "source-reference": "55c56850df64a2489b7d0d8d5a6e0512173c02ec"
+            "source-reference": "571c4e2a09cff42f4679556ccba1b0c197135187",
+            "commit-date": "1342207317"
         },
         {
             "package": "pimple/pimple",
-            "version": "dev-master",
-            "source-reference": "v1.0.0",
-            "alias-pretty-version": "1.0.x-dev",
-            "alias-version": "1.0.9999999.9999999-dev"
-        },
-        {
-            "package": "pimple/pimple",
-            "version": "dev-master",
-            "source-reference": "v1.0.0"
+            "version": "1.0.0"
         }
     ],
     "packages-dev": null,
     "aliases": [
 
     ],
-    "minimum-stability": "dev",
+    "minimum-stability": "stable",
     "stability-flags": {
-        "devmx/teamspeak3-library-dev": 20
+        "devmx/teamspeak3-library": 20
     }
 }
